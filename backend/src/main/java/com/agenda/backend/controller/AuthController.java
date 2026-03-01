@@ -1,12 +1,12 @@
 package com.agenda.backend.controller;
 
-import com.agenda.backend.dto.AuthRequest;
-import com.agenda.backend.model.User;
+import com.agenda.backend.dto.*;
 import com.agenda.backend.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
@@ -16,10 +16,11 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody AuthRequest request) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         try {
-            User user = authService.register(request.getUsername(), request.getPassword());
-            return ResponseEntity.ok("Usuario registrado correctamente");
+            authService.register(request.getUsername(), request.getPassword());
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body("Usuario registrado correctamente");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(e.getMessage());
@@ -27,10 +28,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
         try {
             String token = authService.login(request.getUsername(), request.getPassword());
-            return ResponseEntity.ok(token);
+            return ResponseEntity.ok(new AuthResponse(token));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(e.getMessage());
