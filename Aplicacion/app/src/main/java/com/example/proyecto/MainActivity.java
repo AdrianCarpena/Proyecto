@@ -3,6 +3,7 @@ package com.example.proyecto;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
+
+    Button mvLogin, mvRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        mvLogin = findViewById(R.id.mvLogin);
+        mvRegister = findViewById(R.id.mvRegister);
+
         SharedPreferences preferences = getSharedPreferences("Sesion", MODE_PRIVATE);
 
         if(preferences.getBoolean("sesion_iniciada", false)){
@@ -30,7 +36,13 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
+        mvLogin.setOnClickListener(v -> {
+            startActivity(new Intent(this, LoginActivity.class));
+        });
 
+        mvRegister.setOnClickListener(v -> {
+            startActivity(new Intent(this, RegisterActivity.class));
+        });
 
     }
 }
