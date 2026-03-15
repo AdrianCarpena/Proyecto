@@ -1,5 +1,7 @@
 package com.agenda.backend.model;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,30 +27,33 @@ public class User {
 	@Column(nullable = false)
 	private String password;
 
-	public Long getId() {
-		return id;
-	}
+	 // Un usuario puede tener muchas tareas y exámenes
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Tarea> tareas;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Examen> examenes;
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    // Un usuario puede tener muchas sesiones de estudio
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<StudySession> studySessions;
 	
-	
+    // Getters y setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+
+    public List<Tarea> getTareas() { return tareas; }
+    public void setTareas(List<Tarea> tareas) { this.tareas = tareas; }
+
+    public List<Examen> getExamenes() { return examenes; }
+    public void setExamenes(List<Examen> examenes) { this.examenes = examenes; }
+
+    public List<StudySession> getStudySessions() { return studySessions; }
+    public void setStudySessions(List<StudySession> studySessions) { this.studySessions = studySessions; }
 }
