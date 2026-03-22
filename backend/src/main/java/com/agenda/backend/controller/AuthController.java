@@ -1,9 +1,12 @@
 package com.agenda.backend.controller;
 
+import com.agenda.backend.dto.*;
 import com.agenda.backend.service.AuthService;
-import com.agenda.backend.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
@@ -13,12 +16,25 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public User register(@RequestBody User request) {
-        return authService.register(request.getUsername(), request.getPassword());
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
+        try {
+            authService.register(request.getUsername(), request.getPassword());
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body("Usuario registrado correctamente");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(e.getMessage());
+        }
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User request) {
-        return authService.login(request.getUsername(), request.getPassword());
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
+        try {
+            String token = authService.login(request.getUsername(), request.getPassword());
+            return ResponseEntity.ok(new AuthResponse(token));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(e.getMessage());
+        }
     }
 }
