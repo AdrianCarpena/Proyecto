@@ -17,6 +17,8 @@ public class BusyHours {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    private String titulo;
 
     private LocalDate fecha; // día ocupado
 
@@ -38,4 +40,7 @@ public class BusyHours {
 
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
+    
+	public String getTitulo() {return titulo;	}
+	public void setTitulo(String titulo) {this.titulo = titulo;	}
 }

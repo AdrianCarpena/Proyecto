@@ -22,7 +22,7 @@ public class StudySession{
 
     private int duracionHoras; // duración en horas
 
-    private boolean check; // si se ha completado
+    private boolean completed; // si se ha completado
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -46,8 +46,8 @@ public class StudySession{
     public int getDuracionHoras() { return duracionHoras; }
     public void setDuracionHoras(int duracionHoras) { this.duracionHoras = duracionHoras; }
 
-    public boolean isCheck() { return check; }
-    public void setCheck(boolean check) { this.check = check; }
+    public boolean isCheck() { return completed; }
+    public void setCheck(boolean check) { this.completed = check; }
 
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
