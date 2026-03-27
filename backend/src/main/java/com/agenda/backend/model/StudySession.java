@@ -1,7 +1,9 @@
 package com.agenda.backend.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
@@ -10,8 +12,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Getter
-@Setter
 public class StudySession{
 
     @Id
@@ -22,7 +22,7 @@ public class StudySession{
 
     private int duracionHoras; // duración en horas
 
-    private boolean check; // si se ha completado
+    private boolean completed; // si se ha completado
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -36,4 +36,25 @@ public class StudySession{
     @JoinColumn(name = "tarea_id")
     private Tarea tarea; // puede ser null si es sesión independiente
 
+    // Getters y setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public LocalDate getFecha() { return fecha; }
+    public void setFecha(LocalDate fecha) { this.fecha = fecha; }
+
+    public int getDuracionHoras() { return duracionHoras; }
+    public void setDuracionHoras(int duracionHoras) { this.duracionHoras = duracionHoras; }
+
+    public boolean isCheck() { return completed; }
+    public void setCheck(boolean check) { this.completed = check; }
+
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+
+    public Examen getExamen() { return examen; }
+    public void setExamen(Examen examen) { this.examen = examen; }
+
+    public Tarea getTarea() { return tarea; }
+    public void setTarea(Tarea tarea) { this.tarea = tarea; }
 }

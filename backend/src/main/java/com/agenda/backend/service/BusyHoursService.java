@@ -15,15 +15,11 @@ public class BusyHoursService {
     @Autowired
     private BusyHoursRepository busyHoursRepository;
 
-    @Autowired
-    private PlanningService planningService;
 
     public BusyHours createBusyHours(BusyHours busyHours, User user) {
         busyHours.setUser(user);
         BusyHours saved = busyHoursRepository.save(busyHours);
 
-        // 🔥 recalcular plan
-        planningService.recalculatePlan(user);
 
         return saved;
     }
@@ -41,8 +37,5 @@ public class BusyHoursService {
         }
 
         busyHoursRepository.delete(busy);
-
-        // 🔥 recalcular plan
-        planningService.recalculatePlan(user);
     }
 }

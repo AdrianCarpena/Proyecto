@@ -1,5 +1,6 @@
 package com.agenda.backend.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,23 +9,30 @@ import org.springframework.stereotype.Service;
 import com.agenda.backend.model.Examen;
 import com.agenda.backend.model.User;
 import com.agenda.backend.repository.ExamenRepository;
+import com.agenda.backend.repository.StudySessionRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
+@Transactional
 public class ExamenService {
 
     @Autowired
     private ExamenRepository examenRepository;
 
     @Autowired
+    private StudySessionRepository studySessionRepository;
+
+    @Autowired
     private PlanningService planningService;
 
     public Examen createExam(Examen examen, User user) {
+        if (examen.getFecha().isBefore(LocalDate.now().plusDays(2))) {
+            throw new RuntimeException("La fecha del examen debe ser al menos 2 días después de hoy");
+        }
         examen.setUser(user);
         Examen saved = examenRepository.save(examen);
-
-        // 🔥 recalcular plan
-        planningService.recalculatePlan(user);
-
+        planningService.generarPlanParaEvento(user, examen);
         return saved;
     }
 
@@ -40,9 +48,8 @@ public class ExamenService {
             throw new RuntimeException("No autorizado");
         }
 
-        examenRepository.delete(examen);
+        studySessionRepository.deleteByExamen(examen);
 
-        // 🔥 recalcular plan
-        planningService.recalculatePlan(user);
+        examenRepository.delete(examen);
     }
 }

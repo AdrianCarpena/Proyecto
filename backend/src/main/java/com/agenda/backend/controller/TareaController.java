@@ -3,6 +3,7 @@ package com.agenda.backend.controller;
 import java.security.Principal;
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +29,14 @@ public class TareaController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createTask(@RequestBody Tarea tarea, Principal principal) {
-        User user = getUser(principal);
-        return ResponseEntity.ok(tareaService.createTask(tarea, user));
+    public ResponseEntity<?> createTask(@Valid @RequestBody Tarea tarea, Principal principal) {
+        try{
+            User user = getUser(principal);
+            return ResponseEntity.ok(tareaService.createTask(tarea, user));
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping

@@ -5,6 +5,7 @@ import com.agenda.backend.model.enums.Dificultad;
 import com.agenda.backend.model.enums.Prioridad;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -24,6 +25,7 @@ public class Tarea implements Planifiable {
 
     private String asignatura;
 
+    @Min(value = 1, message = "Las horas estimadas deben ser un número entero positivo")
     private int horasEstimadas; // horas necesarias para completar la tarea
 
     @Enumerated(EnumType.STRING)

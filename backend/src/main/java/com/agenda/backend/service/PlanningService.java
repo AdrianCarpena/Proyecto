@@ -1,222 +1,327 @@
 package com.agenda.backend.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import com.agenda.backend.algorithm.Planifiable;
+import com.agenda.backend.model.BusyHours;
+import com.agenda.backend.model.Examen;
+import com.agenda.backend.model.StudySession;
+import com.agenda.backend.model.Tarea;
 import com.agenda.backend.model.User;
+import com.agenda.backend.repository.BusyHoursRepository;
+import com.agenda.backend.repository.StudySessionRepository;
 
+
+@Service
 public class PlanningService {
 
     @Autowired
-    private BusySlotRepository busySlotRepository;
+    private BusyHoursRepository busyHoursRepository;
+
+    @Autowired
+    private StudySessionRepository studySessionRepository;
 
 
 
 
+    public void reubicarSesionesNoHechas(User user) {
 
+        LocalDate hoy = LocalDate.now();
 
-    public void checkMissedSessions(User user) {
+        List<StudySession> sesiones = studySessionRepository.findByUser(user);
 
-        LocalDate today = LocalDate.now();
+        for (StudySession session : sesiones) {
 
-        // Buscar sesiones pasadas no completadas
-        List<StudySession> missedSessions = studySessionRepository.findByUserAndDateBeforeAndCompletedFalse(user,
-                today);
+            // Solo sesiones pasadas y no hechas
+            if (!session.isCheck() && session.getFecha().isBefore(hoy)) {
 
-        for (StudySession session : missedSessions) {
+                LocalDate dia1 = hoy;
+                LocalDate dia2 = hoy.plusDays(1);
 
-            LocalDate newDate = today;
+                int cargaDia1 = calcularCargaDia(user, dia1);
+                int cargaDia2 = calcularCargaDia(user, dia2);
 
-            // calcular fecha límite (día antes del examen o tarea)
-            LocalDate limitDate = null;
+                LocalDate nuevoDia;
 
-            if (session.getExam() != null) {
-                limitDate = session.getExam().getExamDate().minusDays(1);
-            }
-
-            if (session.getTask() != null) {
-                limitDate = session.getTask().getDeadline().minusDays(1);
-            }
-
-            // buscar día disponible sin pasar el límite
-            while (limitDate != null && !newDate.isAfter(limitDate)) {
-
-                int hoursPlanned = getDailyWorkload(user, newDate);
-
-                if (hoursPlanned < 4) {
-                    break;
+                if (cargaDia1 <= cargaDia2) {
+                    nuevoDia = dia1;
+                } else {
+                    nuevoDia = dia2;
                 }
 
-                newDate = newDate.plusDays(1);
-            }
-
-            // si se pasó del límite, forzar último día posible
-            if (limitDate != null && newDate.isAfter(limitDate)) {
-                newDate = limitDate;
-            }
-
-            session.setDate(newDate);
-            studySessionRepository.save(session);
-        }
-    }
-
-    private int getDailyWorkload(User user, LocalDate date) {
-
-        int studyHours = studySessionRepository
-                .findByUserAndDate(user, date)
-                .stream()
-                .mapToInt(StudySession::getHours)
-                .sum();
-
-        int busyHours = busySlotRepository
-                .findByUserAndDate(user, date)
-                .stream()
-                .mapToInt(BusySlot::getHours)
-                .sum();
-
-        return studyHours + busyHours;
-    }
-
-    public void calculatePlan(Planifiable evento) {
-        User user = evento.getUser();
-        LocalDate hoy = LocalDate.now();
-        LocalDate fechaLimite = evento.getFecha().minusDays(1); // día anterior
-        int horasTotales = evento.getHorasEstimadas();
-
-        if (horasTotales <= 0 || !hoy.isBefore(fechaLimite.plusDays(1))) return;
-
-        // 1️⃣ Reservamos 1h para repaso el día anterior
-        int horasParaRepartir = horasTotales - 1;
-
-        // 2️⃣ Lista de días disponibles
-        List<LocalDate> diasDisponibles = new ArrayList<>();
-        for (LocalDate d = hoy; !d.isAfter(fechaLimite); d = d.plusDays(1)) {
-            diasDisponibles.add(d);
-        }
-
-        if (diasDisponibles.isEmpty()) return;
-
-        // 3️⃣ Calculamos carga actual de cada día
-        Map<LocalDate, Integer> cargaDias = new HashMap<>();
-        for (LocalDate dia : diasDisponibles) {
-            int busy = getBusyHours(user, dia); // horas ocupadas ya existentes
-            cargaDias.put(dia, busy);
-        }
-
-        int horasRestantes = horasParaRepartir;
-
-        // 4️⃣ Distribuimos horas de forma desigual
-        while (horasRestantes > 0 && !diasDisponibles.isEmpty()) {
-            LocalDate mejorDia = diasDisponibles.stream()
-                    .min(Comparator.comparingInt(cargaDias::get))
-                    .get();
-
-            int cargaActual = cargaDias.get(mejorDia);
-            int maxDia = 4; // máximo de estudio recomendado
-            int asignar = Math.min(2, horasRestantes); // 1-2h por iteración
-
-            if (cargaActual + asignar > maxDia) {
-                diasDisponibles.remove(mejorDia);
-                continue;
-            }
-
-            // Creamos sesión vinculada al evento
-            StudySession session = StudySession.builder()
-                    .user(user)
-                    .planifiable(evento)  // el objeto Tarea o Examen
-                    .date(mejorDia)
-                    .hours(asignar)
-                    .description("Estudio: " + evento.getTitulo())
-                    .build();
-            studySessionRepository.save(session);
-
-            cargaDias.put(mejorDia, cargaActual + asignar);
-            horasRestantes -= asignar;
-        }
-
-        // 5️⃣ 1h de repaso el día anterior al evento
-        StudySession repaso = StudySession.builder()
-                .user(user)
-                .planifiable(evento)
-                .date(evento.getFecha().minusDays(1))
-                .hours(1)
-                .description("Repaso final: " + evento.getTitulo())
-                .build();
-        studySessionRepository.save(repaso);
-    }
-
-
-    private void distributeStudyHours(User user, int hoursNeeded, LocalDate start, LocalDate limit, Exam exam,
-                                      Task task) {
-
-        LocalDate current = start;
-
-        while (hoursNeeded > 0 && (current.isBefore(limit) || current.equals(limit))) {
-
-            int workload = getDailyWorkload(user, current);
-
-            if (workload < 4) {
-
-                StudySession session = new StudySession();
-
-                session.setUser(user);
-                session.setDate(current);
-                session.setHours(1);
-                session.setCompleted(false);
-
-                session.setExam(exam);
-                session.setTask(task);
-
+                session.setFecha(nuevoDia);
                 studySessionRepository.save(session);
-
-                hoursNeeded--;
             }
-
-            current = current.plusDays(1);
         }
     }
 
-    private int calculateRequiredHours(String difficulty, String priority) {
+    //Metodo para calcular la carga de trabajo de un día concreto.
+    private int calcularCargaDia(User user, LocalDate fecha) {
 
-        int baseHours;
+        int carga = 0;
 
-        switch (difficulty.toLowerCase()) {
+        // 1. BusyHours
+        List<BusyHours> busyList = busyHoursRepository.findByUserAndFecha(user, fecha);
 
-            case "facil":
-                baseHours = 2;
-                break;
-
-            case "medio":
-                baseHours = 5;
-                break;
-
-            case "dificil":
-                baseHours = 8;
-                break;
-
-            default:
-                baseHours = 4;
+        for (BusyHours busy : busyList) {
+            carga += busy.getDuracionHoras();
         }
 
-        double multiplier;
+        // 2. StudySessions
+        List<StudySession> sesiones = studySessionRepository.findByUserAndFecha(user, fecha);
 
-        switch (priority.toLowerCase()) {
-
-            case "alta":
-                multiplier = 1.5;
-                break;
-
-            case "media":
-                multiplier = 1.25;
-                break;
-
-            default:
-                multiplier = 1.0;
+        for (StudySession s : sesiones) {
+            carga += s.getDuracionHoras();
         }
 
-        return (int) Math.round(baseHours * multiplier);
+        return carga;
     }
+
+
+
+    //Metodo donde el algoritmo  genera el plan de trabajo.
+    public void generarPlanParaEvento(User user, Planifiable evento) {
+
+        //Borramos todas las sesiones asignadas a ese evento por si se crea 2 veces o hay errores que no se duplique.
+        if (evento instanceof Examen) {
+            studySessionRepository.deleteByExamen((Examen) evento);
+        } else {
+            studySessionRepository.deleteByTarea((Tarea) evento);
+        }
+
+        int horasTotales = calcularHoras(evento);
+
+        boolean esExamen = evento instanceof Examen;
+
+        // Reserva de 1h para repaso en examen
+        if (esExamen) {
+            horasTotales -= 1;
+        }
+
+        List<LocalDate> diasDisponibles = obtenerDiasDisponibles(evento);
+
+        int horasRestantes = horasTotales;
+
+        Map<LocalDate, StudySession> sesionesPorDia = new HashMap<>();
+
+        // VUELTAS:
+        // 6 → sesiones de 2h
+        // 3 → sesiones de 2h
+        // 1 → sesiones de 1h
+        // 0 → fase final iterativa sin restricción
+        int[] distancias = {6, 3, 1, 0};
+
+        for (int distanciaMinima : distancias) {
+
+            if (horasRestantes <= 0) break;
+
+            // Orden global en TODAS las vueltas
+            diasDisponibles.sort(Comparator
+                    .comparingInt((LocalDate d) -> calcularCargaDia(user, d))
+                    .thenComparing(d -> d));
+
+            // Si estamos en fase final → iterar hasta completar horas
+            if (distanciaMinima == 0) {
+
+                while (horasRestantes > 0) {
+
+                    boolean progreso = false;
+
+                    for (LocalDate dia : diasDisponibles) {
+
+                        if (horasRestantes <= 0) break;
+
+                        StudySession session = sesionesPorDia.get(dia);
+
+                        if (session == null) {
+                            session = crearSesion(user, evento, dia, 1);
+                            sesionesPorDia.put(dia, session);
+                        } else {
+                            session.setDuracionHoras(session.getDuracionHoras() + 1);
+                        }
+
+                        horasRestantes--;
+                        progreso = true;
+                    }
+
+                    // Si en una iteración no se pudo avanzar → salir (evita bucles infinitos)
+                    if (!progreso) break;
+                }
+
+            } else {
+
+                // Vueltas restrictivas (6, 3, 1)
+                for (LocalDate dia : diasDisponibles) {
+
+                    if (horasRestantes <= 0) break;
+
+                    // Comprobar distancia mínima
+                    if (!cumpleDistancia(dia, sesionesPorDia.keySet(), distanciaMinima)) {
+                        continue;
+                    }
+
+                    // Si ya existe sesión en ese día → no tocar en estas vueltas
+                    if (sesionesPorDia.containsKey(dia)) {
+                        continue;
+                    }
+
+                    int duracionSesion = (distanciaMinima >= 3) ? 2 : 1;
+
+                    StudySession session = crearSesion(user, evento, dia, duracionSesion);
+
+                    sesionesPorDia.put(dia, session);
+
+                    horasRestantes -= duracionSesion;
+                }
+            }
+        }
+
+        // Guardar sesiones
+        for (StudySession session : sesionesPorDia.values()) {
+            studySessionRepository.save(session);
+        }
+
+        // 📌 Repaso examen (1h día anterior)
+        if (esExamen) {
+            LocalDate diaRepaso = evento.getFecha().minusDays(1);
+
+            StudySession repaso = crearSesion(user, evento, diaRepaso, 1);
+            studySessionRepository.save(repaso);
+        }
+    }
+
+
+    private boolean cumpleDistancia(LocalDate dia, Set<LocalDate> diasUsados, int distanciaMinima) {
+
+        for (LocalDate usado : diasUsados) {
+
+            long diferencia = Math.abs(usado.toEpochDay() - dia.toEpochDay());
+
+            if (diferencia < distanciaMinima) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+
+
+    private StudySession crearSesion(User user, Planifiable evento, LocalDate dia, int horas) {
+
+        StudySession session = new StudySession();
+
+        session.setFecha(dia);
+        session.setDuracionHoras(horas);
+        session.setUser(user);
+        session.setCheck(false);
+
+        if (evento instanceof Examen) {
+            session.setExamen((Examen) evento);
+        } else {
+            session.setTarea((Tarea) evento);
+        }
+
+        return session;
+    }
+
+
+
+    //Metodo con el que obtenemos los días disponibles para hacer el plan.
+    private List<LocalDate> obtenerDiasDisponibles(Planifiable evento) {
+
+        LocalDate hoy = LocalDate.now();
+        LocalDate fechaEvento = evento.getFecha();
+
+        // Límite de 25 días
+        LocalDate fechaInicioLimite = fechaEvento.minusDays(25);
+
+        LocalDate fechaInicio = hoy.isAfter(fechaInicioLimite) ? hoy : fechaInicioLimite;
+
+        LocalDate fechaFin;
+
+        if (evento instanceof Examen) {
+            // Excluimos día antes (repaso)
+            fechaFin = fechaEvento.minusDays(2);
+        } else {
+            // Tarea
+            fechaFin = fechaEvento.minusDays(1);
+        }
+
+        List<LocalDate> dias = new ArrayList<>();
+
+        LocalDate actual = fechaInicio;
+
+        while (!actual.isAfter(fechaFin)) {
+            dias.add(actual);
+            actual = actual.plusDays(1);
+        }
+
+        return dias;
+    }
+
+
+
+
+
+    //Metodo para calcular las horas que se necesitan aproximadamente para preparar un examen o una tarea.
+    private int calcularHoras(Planifiable evento) {
+
+        int horasBase = 0;
+
+        // Diferenciamos si es examen o tarea
+        if (evento instanceof Examen) {
+            switch (evento.getDificultad()) {
+                case FACIL:
+                    horasBase = 3;
+                    break;
+                case MEDIA:
+                    horasBase = 5;
+                    break;
+                case DIFICIL:
+                    horasBase = 8;
+                    break;
+            }
+        } else if (evento instanceof Tarea) {
+            switch (evento.getDificultad()) {
+                case FACIL:
+                    horasBase = 2;
+                    break;
+                case MEDIA:
+                    horasBase = 4;
+                    break;
+                case DIFICIL:
+                    horasBase = 5;
+                    break;
+            }
+        }
+
+        int extra = 0;
+
+        switch (evento.getPrioridad()) {
+            case MEDIA:
+                extra = 1;
+                break;
+            case ALTA:
+                extra = 2;
+                break;
+            default:
+                extra = 0;
+        }
+
+        return horasBase + extra;
+    }
+
+
 
 }
