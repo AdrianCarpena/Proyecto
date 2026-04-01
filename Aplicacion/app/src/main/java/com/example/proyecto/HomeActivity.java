@@ -23,11 +23,16 @@ public class HomeActivity extends AppCompatActivity {
         // Aplicar modo oscuro persistente
         SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
         boolean darkMode = prefs.getBoolean("dark_mode", false);
+        String language = prefs.getString("language", "es");
+
         if(darkMode){
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
+
+        // Aplicar idioma
+        LocaleHelper.setLocale(this, language);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);

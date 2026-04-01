@@ -6,5 +6,6 @@
         android:id="@+id/menu_profile"
         android:icon="@drawable/ic_profile"
         android:title="@string/perfil"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        app:iconTint="?attr/colorOnSurface"/>
 </menu>
