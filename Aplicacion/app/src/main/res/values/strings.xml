@@ -19,4 +19,9 @@
     <string name="examenes">Examenes</string>
     <string name="chat">Chat</string>
     <string name="perfil">Perfil</string>
+    <string name="convierte_tus_fechas_de_examen_en_un_plan_de_estudio_organizado">Convierte tus fechas de examen en un plan de estudio organizado.</string>
+    <string name="idioma">Idioma</string>
+    <string name="cerrar_sesi_n">Cerrar sesión</string>
+    <string name="borrar_cuenta">Borrar cuenta</string>
+    <string name="modo_oscuro_claro">Modo Oscuro / Claro</string>
 </resources>

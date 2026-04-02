@@ -10,7 +10,7 @@
         android:id="@+id/topBarProfile"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:title="Perfil"
+        android:title="@string/perfil"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -38,7 +38,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Modo Oscuro / Claro"
+                android:text="@string/modo_oscuro_claro"
                 android:textSize="16sp"/>
             <Switch
                 android:id="@+id/switchDarkMode"
@@ -57,7 +57,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Idioma"
+                android:text="@string/idioma"
                 android:textSize="16sp"/>
             <Spinner
                 android:id="@+id/spinnerLanguage"
@@ -70,7 +70,7 @@
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cerrar sesión"
+            android:text="@string/cerrar_sesi_n"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_marginBottom="16dp"/>
 
@@ -79,7 +79,7 @@
             android:id="@+id/btnDeleteAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Borrar cuenta"
+            android:text="@string/borrar_cuenta"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_marginBottom="16dp"/>
 

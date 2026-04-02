@@ -42,7 +42,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Convierte tus fechas de examen en un plan de estudio organizado."
+            android:text="@string/convierte_tus_fechas_de_examen_en_un_plan_de_estudio_organizado"
             android:textSize="16sp"
             android:gravity="center"
             app:layout_constraintTop_toBottomOf="@id/tvTitulo"
