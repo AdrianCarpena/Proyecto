@@ -1,8 +1,10 @@
 package com.example.proyecto;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -20,24 +22,31 @@ public class ProfileActivity extends AppCompatActivity {
     Spinner spinnerLanguage;
     MaterialButton btnLogout, btnDeleteAccount;
 
-    boolean firstSelection = true; // 🔥 para evitar ejecución inicial del spinner
+    boolean firstSelection = true; // evita que el spinner ejecute al iniciarse
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        SharedPreferences prefs = newBase.getSharedPreferences("Settings", MODE_PRIVATE);
+        String language = prefs.getString("language", "es");
+        super.attachBaseContext(LocaleHelper.setLocale(newBase, language));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        // Preferencias
+        // ⚙ Preferencias
         SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
         boolean darkMode = prefs.getBoolean("dark_mode", false);
         String language = prefs.getString("language", "es");
 
-        // Aplicar modo oscuro
-        if(darkMode){
+        // 🌙 Aplicar modo oscuro
+        if (darkMode) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
 
-        // Aplicar idioma
+        // 🌍 Aplicar idioma
         LocaleHelper.setLocale(this, language);
 
         super.onCreate(savedInstanceState);
@@ -55,50 +64,47 @@ public class ProfileActivity extends AppCompatActivity {
         btnLogout = findViewById(R.id.btnLogout);
         btnDeleteAccount = findViewById(R.id.btnDeleteAccount);
 
-        // Switch estado inicial
+        // Switch Dark Mode
         switchDarkMode.setChecked(darkMode);
-
-        // 🔥 Switch Dark Mode
         switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean("dark_mode", isChecked);
             editor.apply();
 
-            if(isChecked){
+            if (isChecked) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
         });
 
-        // 🔥 Spinner idioma
+        // Spinner idioma
         String[] languages = {"Español", "English"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, languages);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerLanguage.setAdapter(adapter);
-
-        // Selección actual
         spinnerLanguage.setSelection(language.equals("en") ? 1 : 0);
 
         spinnerLanguage.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(android.widget.AdapterView<?> parent, android.view.View view, int position, long id) {
+            public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
 
-                if(firstSelection){
+                if (firstSelection) { // evita ejecutar al crear actividad
                     firstSelection = false;
-                    return; // 🚫 evita ejecución automática
+                    return;
                 }
 
                 String selectedLang = position == 0 ? "es" : "en";
 
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString("language", selectedLang);
-                editor.apply();
+                if (!selectedLang.equals(language)) {
+                    // Guardar idioma
+                    prefs.edit().putString("language", selectedLang).apply();
 
-                // 🔁 Reiniciar app
-                Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                    // Reiniciar toda la app para reflejar el cambio
+                    Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
             }
 
             @Override
@@ -107,9 +113,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         // 🔐 Cerrar sesión
         btnLogout.setOnClickListener(v -> {
-            prefs.edit().remove("sesion_iniciada").apply();
-            startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
-            finish();
+            SharedPreferences sessionPrefs = getSharedPreferences("Sesion", MODE_PRIVATE);
+            sessionPrefs.edit().clear().apply();
+
+            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         });
 
         // ❌ Borrar cuenta

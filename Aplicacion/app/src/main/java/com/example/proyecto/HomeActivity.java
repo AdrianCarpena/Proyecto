@@ -1,5 +1,6 @@
 package com.example.proyecto;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,8 +20,15 @@ public class HomeActivity extends AppCompatActivity {
     BottomNavigationView bottomNav;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        SharedPreferences prefs = newBase.getSharedPreferences("Settings", MODE_PRIVATE);
+        String language = prefs.getString("language", "es");
+        super.attachBaseContext(LocaleHelper.setLocale(newBase, language));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Aplicar modo oscuro persistente
+        // 🔹 Aplicar modo oscuro persistente
         SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
         boolean darkMode = prefs.getBoolean("dark_mode", false);
         String language = prefs.getString("language", "es");
@@ -31,55 +39,49 @@ public class HomeActivity extends AppCompatActivity {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
 
-        // Aplicar idioma
+        // 🔹 Aplicar idioma persistente
         LocaleHelper.setLocale(this, language);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        // 🔹 Toolbar
         MaterialToolbar toolbar = findViewById(R.id.topBar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("");
+        getSupportActionBar().setTitle(""); // quitar texto “Proyecto”
 
+        // 🔹 Views
         viewPager = findViewById(R.id.viewPager);
         bottomNav = findViewById(R.id.bottomNav);
 
+        // 🔹 Adapter
         HomePagerAdapter adapter = new HomePagerAdapter(this);
         viewPager.setAdapter(adapter);
 
+        // 🔹 Sincronizar swipe con BottomNavigation
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
-                switch (position){
-                    case 0: bottomNav.setSelectedItemId(R.id.nav_home); break;
-                    case 1: bottomNav.setSelectedItemId(R.id.nav_cal); break;
-                    case 2: bottomNav.setSelectedItemId(R.id.nav_tareas); break;
-                    case 3: bottomNav.setSelectedItemId(R.id.nav_examen); break;
-                    case 4: bottomNav.setSelectedItemId(R.id.nav_chat); break;
-                }
+                if(position == 0) bottomNav.setSelectedItemId(R.id.nav_home);
+                else if(position == 1) bottomNav.setSelectedItemId(R.id.nav_cal);
+                else if(position == 2) bottomNav.setSelectedItemId(R.id.nav_tareas);
+                else if(position == 3) bottomNav.setSelectedItemId(R.id.nav_examen);
+                else if(position == 4) bottomNav.setSelectedItemId(R.id.nav_chat);
             }
         });
 
-        bottomNav.setOnItemSelectedListener(item -> {
-            if(item.getItemId()==R.id.nav_home) viewPager.setCurrentItem(0);
-            if(item.getItemId()==R.id.nav_cal) viewPager.setCurrentItem(1);
-            if(item.getItemId()==R.id.nav_tareas) viewPager.setCurrentItem(2);
-            if(item.getItemId()==R.id.nav_examen) viewPager.setCurrentItem(3);
-            if(item.getItemId()==R.id.nav_chat) viewPager.setCurrentItem(4);
-            return true;
-        });
+        // 🔹 Cambiar página al pulsar BottomNavigation
 
     }
 
-    // Menú Toolbar
+    // 🔹 Toolbar menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.top_menu, menu);
         return true;
     }
 
-
-
+    // 🔹 Detectar click de perfil
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.menu_profile){
