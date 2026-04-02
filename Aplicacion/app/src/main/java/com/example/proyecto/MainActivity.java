@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -25,7 +26,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+        boolean darkMode = prefs.getBoolean("dark_mode", false);
+
+        if(darkMode){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
         super.onCreate(savedInstanceState);
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -37,20 +48,13 @@ public class MainActivity extends AppCompatActivity {
         mvLogin = findViewById(R.id.mvLogin);
         mvRegister = findViewById(R.id.mvRegister);
 
-        SharedPreferences preferences = getSharedPreferences("Sesion", MODE_PRIVATE);
-
-        if(preferences.getBoolean("sesion_iniciada", false)){
+        SharedPreferences sessionPrefs = getSharedPreferences("Sesion", MODE_PRIVATE);
+        if(sessionPrefs.getBoolean("sesion_iniciada", false)){
             startActivity(new Intent(this, HomeActivity.class));
             finish();
         }
 
-        mvLogin.setOnClickListener(v -> {
-            startActivity(new Intent(this, LoginActivity.class));
-        });
-
-        mvRegister.setOnClickListener(v -> {
-            startActivity(new Intent(this, RegisterActivity.class));
-        });
-
+        mvLogin.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
+        mvRegister.setOnClickListener(v -> startActivity(new Intent(this, RegisterActivity.class)));
     }
 }
