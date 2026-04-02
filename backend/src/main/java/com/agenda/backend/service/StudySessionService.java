@@ -1,8 +1,11 @@
 package com.agenda.backend.service;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.agenda.backend.exception.ForbiddenException;
 import com.agenda.backend.model.StudySession;
 import com.agenda.backend.model.User;
 import com.agenda.backend.repository.StudySessionRepository;
@@ -20,7 +23,7 @@ public class StudySessionService {
                 .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
 
         if (!session.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("No autorizado");
+        	throw new ForbiddenException("No autorizado");
         }
 
         session.setCheck(true);
@@ -34,7 +37,28 @@ public class StudySessionService {
                 .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
 
         if (!session.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("No autorizado");
+        	throw new ForbiddenException("No autorizado");
+        }
+        
+        //Comprobacion de que la fecha nueva está entre la fecha actual y la del dia anterior al examen o tarea asociada
+        LocalDate hoy = LocalDate.now();
+
+        if (nuevaFecha.isBefore(hoy)) {
+            throw new IllegalArgumentException("No puedes mover una sesión a una fecha pasada");
+        }
+
+        if (session.getExamen() != null) {
+            LocalDate fechaLimite = session.getExamen().getFecha().minusDays(1);
+            if (nuevaFecha.isAfter(fechaLimite)) {
+                throw new IllegalArgumentException("La sesión no puede moverse después del día anterior al examen");
+            }
+        }
+
+        if (session.getTarea() != null) {
+            LocalDate fechaLimite = session.getTarea().getFecha().minusDays(1);
+            if (nuevaFecha.isAfter(fechaLimite)) {
+                throw new IllegalArgumentException("La sesión no puede moverse después del día anterior a la fecha límite de la tarea");
+            }
         }
 
         session.setFecha(nuevaFecha);

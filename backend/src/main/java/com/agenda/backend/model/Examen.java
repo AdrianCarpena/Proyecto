@@ -24,7 +24,7 @@ public class Examen implements Planifiable {
 
     private String asignatura;
 
-    private int horasEstimadas; // horas necesarias de estudio
+    private Integer horasEstimadas; // horas necesarias de estudio
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -47,8 +47,8 @@ public class Examen implements Planifiable {
     public String getAsignatura() { return asignatura; }
     public void setAsignatura(String asignatura) { this.asignatura = asignatura; }
 
-    public int getHorasEstimadas() { return horasEstimadas; }
-    public void setHorasEstimadas(int horasEstimadas) { this.horasEstimadas = horasEstimadas; }
+    public Integer getHorasEstimadas() { return horasEstimadas; }
+    public void setHorasEstimadas(Integer horasEstimadas) { this.horasEstimadas = horasEstimadas; }
 
     public Prioridad getPrioridad() { return prioridad; }
     public void setPrioridad(Prioridad prioridad) { this.prioridad = prioridad; }

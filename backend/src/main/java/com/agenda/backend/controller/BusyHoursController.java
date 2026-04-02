@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.agenda.backend.dto.BusyHoursResponseDTO;
 import com.agenda.backend.model.BusyHours;
 import com.agenda.backend.model.User;
 import com.agenda.backend.service.BusyHoursService;
@@ -26,17 +27,35 @@ public class BusyHoursController {
         return userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
+    
+    //Metodo para pasar a DTO la entidad
+    private BusyHoursResponseDTO toDTO(BusyHours busyHours) {
+        return new BusyHoursResponseDTO(
+                busyHours.getId(),
+                busyHours.getTitulo(),
+                busyHours.getFecha(),
+                busyHours.getDuracionHoras(),
+                busyHours.getUser().getId()
+        );
+    }
 
     @PostMapping
-    public ResponseEntity<?> createBusy(@RequestBody BusyHours busyHours, Principal principal) {
+    public ResponseEntity<BusyHoursResponseDTO> createBusy(@RequestBody BusyHours busyHours, Principal principal) {
         User user = getUser(principal);
-        return ResponseEntity.ok(busyHoursService.createBusyHours(busyHours, user));
+        BusyHours saved = busyHoursService.createBusyHours(busyHours, user);
+        return ResponseEntity.status(201).body(toDTO(saved));
     }
 
     @GetMapping
-    public ResponseEntity<List<BusyHours>> getBusy(Principal principal) {
+    public ResponseEntity<List<BusyHoursResponseDTO>> getBusy(Principal principal) {
         User user = getUser(principal);
-        return ResponseEntity.ok(busyHoursService.getBusyHours(user));
+
+        List<BusyHoursResponseDTO> response = busyHoursService.getBusyHours(user)
+                .stream()
+                .map(this::toDTO)
+                .toList();
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")

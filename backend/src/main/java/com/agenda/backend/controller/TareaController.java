@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.agenda.backend.dto.TareaResponseDTO;
 import com.agenda.backend.model.Tarea;
 import com.agenda.backend.model.User;
 import com.agenda.backend.service.TareaService;
@@ -26,17 +27,37 @@ public class TareaController {
         return userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
+    
+    //Metodo para pasar a DTO la entidad
+    private TareaResponseDTO toDTO(Tarea tarea) {
+        return new TareaResponseDTO(
+                tarea.getId(),
+                tarea.getAsignatura(),
+                tarea.getDificultad().name(),
+                tarea.getPrioridad().name(),
+                tarea.getHorasEstimadas(),
+                tarea.getFecha(),
+                tarea.getUser().getId()
+        );
+    }
 
     @PostMapping
-    public ResponseEntity<?> createTask(@RequestBody Tarea tarea, Principal principal) {
+    public ResponseEntity<TareaResponseDTO> createTask(@RequestBody Tarea tarea, Principal principal) {
         User user = getUser(principal);
-        return ResponseEntity.ok(tareaService.createTask(tarea, user));
+        Tarea saved = tareaService.createTask(tarea, user);
+        return ResponseEntity.status(201).body(toDTO(saved));
     }
 
     @GetMapping
-    public ResponseEntity<List<Tarea>> getTasks(Principal principal) {
+    public ResponseEntity<List<TareaResponseDTO>> getTasks(Principal principal) {
         User user = getUser(principal);
-        return ResponseEntity.ok(tareaService.getTasks(user));
+
+        List<TareaResponseDTO> response = tareaService.getTasks(user)
+                .stream()
+                .map(this::toDTO)
+                .toList();
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")

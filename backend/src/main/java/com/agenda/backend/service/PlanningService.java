@@ -127,7 +127,7 @@ public class PlanningService {
 	        // Orden global en TODAS las vueltas
 	        diasDisponibles.sort(Comparator
 	                .comparingInt((LocalDate d) -> calcularCargaDia(user, d))
-	                .thenComparing(d -> d));
+	                .thenComparing(Comparator.reverseOrder()));
 
 	        // Si estamos en fase final → iterar hasta completar horas
 	        if (distanciaMinima == 0) {
@@ -174,7 +174,17 @@ public class PlanningService {
 	                    continue;
 	                }
 
-	                int duracionSesion = (distanciaMinima >= 3) ? 2 : 1;
+	                int duracionSesion;
+
+	                if (distanciaMinima >= 3) {
+	                    if (horasRestantes >= 2) {
+	                        duracionSesion = 2;
+	                    } else {
+	                        duracionSesion=1; // deja esa 1h para la vuelta de 1h o la final
+	                    }
+	                } else {
+	                    duracionSesion = 1;
+	                }
 
 	                StudySession session = crearSesion(user, evento, dia, duracionSesion);
 
@@ -192,10 +202,17 @@ public class PlanningService {
 
 	    // 📌 Repaso examen (1h día anterior)
 	    if (esExamen) {
+
 	        LocalDate diaRepaso = evento.getFecha().minusDays(1);
 
-	        StudySession repaso = crearSesion(user, evento, diaRepaso, 1);
-	        studySessionRepository.save(repaso);
+	        StudySession existente = sesionesPorDia.get(diaRepaso);
+
+	        if (existente != null) {
+	            existente.setDuracionHoras(existente.getDuracionHoras() + 1);
+	        } else {
+	            StudySession repaso = crearSesion(user, evento, diaRepaso, 1);
+	            studySessionRepository.save(repaso);
+	        }
 	    }
 	}
 	
@@ -235,7 +252,21 @@ public class PlanningService {
 	    return session;
 	}
 	
-	
+	//Metodo para saber los dias maximos de antelacion para empezar sesiones
+	private int calcularDiasMaximosAntelacion(Planifiable evento) {
+
+	    int horas = calcularHoras(evento);
+
+	    if (horas < 4) {
+	        return 7;
+	    } else if (horas < 8) {
+	        return 18;
+	    } else if (horas < 13) {
+	        return 25;
+	    } else {
+	        return horas * 3;
+	    }
+	}
 	
 	//Metodo con el que obtenemos los días disponibles para hacer el plan.
 	private List<LocalDate> obtenerDiasDisponibles(Planifiable evento) {
@@ -243,8 +274,9 @@ public class PlanningService {
 	    LocalDate hoy = LocalDate.now();
 	    LocalDate fechaEvento = evento.getFecha();
 
-	    // Límite de 25 días
-	    LocalDate fechaInicioLimite = fechaEvento.minusDays(25);
+	    // Límite de dias de antelacion
+	    int diasMaximosAntelacion = calcularDiasMaximosAntelacion(evento);
+	    LocalDate fechaInicioLimite = fechaEvento.minusDays(diasMaximosAntelacion);
 
 	    LocalDate fechaInicio = hoy.isAfter(fechaInicioLimite) ? hoy : fechaInicioLimite;
 
@@ -252,7 +284,7 @@ public class PlanningService {
 
 	    if (evento instanceof Examen) {
 	        // Excluimos día antes (repaso)
-	        fechaFin = fechaEvento.minusDays(2);
+	        fechaFin = fechaEvento.minusDays(1);
 	    } else {
 	        // Tarea
 	        fechaFin = fechaEvento.minusDays(1);
@@ -276,7 +308,11 @@ public class PlanningService {
 	
 	//Metodo para calcular las horas que se necesitan aproximadamente para preparar un examen o una tarea.
 	private int calcularHoras(Planifiable evento) {
-
+		
+		if (evento.getHorasEstimadas() != null && evento.getHorasEstimadas() > 0) {
+		    return evento.getHorasEstimadas();
+		}
+		
 	    int horasBase = 0;
 
 	    // Diferenciamos si es examen o tarea

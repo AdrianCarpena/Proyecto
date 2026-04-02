@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.agenda.backend.exception.ForbiddenException;
 import com.agenda.backend.model.BusyHours;
 import com.agenda.backend.model.User;
 import com.agenda.backend.repository.BusyHoursRepository;
@@ -33,7 +34,7 @@ public class BusyHoursService {
                 .orElseThrow(() -> new RuntimeException("BusyHours no encontrado"));
 
         if (!busy.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("No autorizado");
+        	throw new ForbiddenException("No autorizado");
         }
 
         busyHoursRepository.delete(busy);

@@ -29,4 +29,12 @@ public class CalendarController {
 
         return calendarService.getCalendarioCompleto(user);
     }
+    
+    @GetMapping("/today")
+    public List<CalendarEventDTO> getEventosDeHoy(Principal principal) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        return calendarService.getEventosDeHoy(user);
+    }
 }

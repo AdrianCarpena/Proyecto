@@ -1,10 +1,12 @@
 package com.agenda.backend.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.agenda.backend.exception.ForbiddenException;
 import com.agenda.backend.model.Examen;
 import com.agenda.backend.model.User;
 import com.agenda.backend.repository.ExamenRepository;
@@ -27,6 +29,15 @@ public class ExamenService {
 
     public Examen createExam(Examen examen, User user) {
         examen.setUser(user);
+        
+        if (!examen.getFecha().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("La fecha del examen debe ser posterior a hoy");
+        }
+        
+        if (examen.getHorasEstimadas() != null && examen.getHorasEstimadas() <= 0) {
+            throw new IllegalArgumentException("Las horas estimadas deben ser un número entero positivo");
+        }
+        
         Examen saved = examenRepository.save(examen);
 
         // 🔥 recalcular plan
@@ -44,7 +55,7 @@ public class ExamenService {
                 .orElseThrow(() -> new RuntimeException("Examen no encontrado"));
 
         if (!examen.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("No autorizado");
+        	throw new ForbiddenException("No autorizado");
         }
         
         studySessionRepository.deleteByExamen(examen);

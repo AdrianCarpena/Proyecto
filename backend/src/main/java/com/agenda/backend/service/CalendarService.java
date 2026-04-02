@@ -1,5 +1,6 @@
 package com.agenda.backend.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,5 +106,14 @@ public class CalendarService {
         }
 
         return eventos;
+    }
+
+    public List<CalendarEventDTO> getEventosDeHoy(User user) {
+        LocalDate hoy = LocalDate.now();
+
+        return getCalendarioCompleto(user)
+                .stream()
+                .filter(evento -> hoy.equals(evento.getFecha()))
+                .toList();
     }
 }

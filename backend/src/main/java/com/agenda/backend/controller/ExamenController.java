@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.agenda.backend.dto.ExamenResponseDTO;
 import com.agenda.backend.model.Examen;
 import com.agenda.backend.model.User;
 import com.agenda.backend.service.ExamenService;
@@ -26,17 +27,37 @@ public class ExamenController {
         return userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
+    
+    //Metodo para obtener el DTO de la entidad
+    private ExamenResponseDTO toDTO(Examen examen) {
+        return new ExamenResponseDTO(
+                examen.getId(),
+                examen.getAsignatura(),
+                examen.getDificultad().name(),
+                examen.getPrioridad().name(),
+                examen.getHorasEstimadas(),
+                examen.getFecha(),
+                examen.getUser().getId()
+        );
+    }
 
     @PostMapping
-    public ResponseEntity<?> createExam(@RequestBody Examen examen, Principal principal) {
+    public ResponseEntity<ExamenResponseDTO> createExam(@RequestBody Examen examen, Principal principal) {
         User user = getUser(principal);
-        return ResponseEntity.ok(examenService.createExam(examen, user));
+        Examen saved = examenService.createExam(examen, user);
+        return ResponseEntity.status(201).body(toDTO(saved));
     }
 
     @GetMapping
-    public ResponseEntity<List<Examen>> getExams(Principal principal) {
+    public ResponseEntity<List<ExamenResponseDTO>> getExams(Principal principal) {
         User user = getUser(principal);
-        return ResponseEntity.ok(examenService.getExams(user));
+
+        List<ExamenResponseDTO> response = examenService.getExams(user)
+                .stream()
+                .map(this::toDTO)
+                .toList();
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")

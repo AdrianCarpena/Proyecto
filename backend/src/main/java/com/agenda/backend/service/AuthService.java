@@ -1,5 +1,6 @@
 package com.agenda.backend.service;
 
+import com.agenda.backend.exception.ConflictException;
 import com.agenda.backend.model.User;
 import com.agenda.backend.repository.UserRepository;
 import com.agenda.backend.security.JwtUtils;
@@ -24,7 +25,7 @@ public class AuthService {
     // Registro de usuario
     public User register(String username, String password) {
         if(userRepository.findByUsername(username).isPresent()){
-            throw new RuntimeException("Usuario ya existe");
+        	throw new ConflictException("El usuario ya existe");
         }
 
         User user = new User();
@@ -40,14 +41,14 @@ public class AuthService {
         Optional<User> userOpt = userRepository.findByUsername(username);
 
         if(userOpt.isEmpty()){
-            throw new RuntimeException("Usuario no encontrado");
+        	throw new ConflictException("Credenciales incorrectas");
         }
 
         User user = userOpt.get();
 
         // Comprobamos contraseña
         if(!passwordEncoder.matches(password, user.getPassword())){
-            throw new RuntimeException("Contraseña incorrecta");
+        	throw new ConflictException("Credenciales incorrectas");
         }
 
         // Generamos JWT

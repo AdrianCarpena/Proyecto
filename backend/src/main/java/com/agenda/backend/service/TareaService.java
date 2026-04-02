@@ -1,10 +1,12 @@
 package com.agenda.backend.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.agenda.backend.exception.ForbiddenException;
 import com.agenda.backend.model.Tarea;
 import com.agenda.backend.model.User;
 import com.agenda.backend.repository.StudySessionRepository;
@@ -27,6 +29,15 @@ public class TareaService {
 
     public Tarea createTask(Tarea tarea, User user) {
         tarea.setUser(user);
+        
+        if (!tarea.getFecha().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("La fecha de la tarea debe ser posterior a hoy");
+        }
+        
+        if (tarea.getHorasEstimadas() != null && tarea.getHorasEstimadas() <= 0) {
+            throw new IllegalArgumentException("Las horas estimadas deben ser un número entero positivo");
+        }
+        
         Tarea saved = tareaRepository.save(tarea);
 
         // 🔥 recalcular plan
@@ -44,7 +55,7 @@ public class TareaService {
                 .orElseThrow(() -> new RuntimeException("Tarea no encontrada"));
 
         if (!tarea.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("No autorizado");
+        	throw new ForbiddenException("No autorizado");
         }
         
         studySessionRepository.deleteByTarea(tarea);
