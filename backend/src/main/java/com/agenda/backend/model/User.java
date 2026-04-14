@@ -2,6 +2,8 @@ package com.agenda.backend.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -37,6 +39,21 @@ public class User {
     // Un usuario puede tener muchas sesiones de estudio
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<StudySession> studySessions;
+    
+    
+    //Atributos para el chat, JsonIgnore es para que no mande este atributo al frontend al generar el json
+    @JsonIgnore
+    @OneToMany(mappedBy = "creator")
+    private List<Chat> createdChats;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<ChatMembership> chatMemberships;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "sender")
+    private List<Message> messages;
+    
 	
     // Getters y setters
     public Long getId() { return id; }

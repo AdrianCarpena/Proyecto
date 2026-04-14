@@ -13,4 +13,5 @@ public interface BusyHoursRepository extends JpaRepository<BusyHours, Long> {
     
     List<BusyHours> findByUserAndFecha(User user, LocalDate fecha);
   
+    void deleteByUser(User user);
 }

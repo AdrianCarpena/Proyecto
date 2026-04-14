@@ -12,4 +12,6 @@ public interface ExamenRepository extends JpaRepository<Examen, Long> {
     List<Examen> findByUser(User user);
     
     List<Examen> findByUserAndFechaAfter(User user, LocalDate fecha);
+    
+    void deleteByUser(User user);
 }
