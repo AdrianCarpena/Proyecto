@@ -36,6 +36,9 @@
             android:parentActivityName=".HomeActivity">
         </activity>
 
+        <activity android:name=".ChatDetailActivity"
+            android:windowSoftInputMode="adjustResize" />
+
     </application>
 
 </manifest>

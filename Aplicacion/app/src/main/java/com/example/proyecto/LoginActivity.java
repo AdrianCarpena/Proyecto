@@ -87,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putBoolean("sesion_iniciada", true);
                         editor.putString("token", token);
+                        editor.putString("username", username);
                         editor.apply();
 
                         Toast.makeText(LoginActivity.this,
