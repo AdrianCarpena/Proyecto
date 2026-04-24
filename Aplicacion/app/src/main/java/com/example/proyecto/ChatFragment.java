@@ -53,8 +53,13 @@ public class ChatFragment extends Fragment {
         rvChats = view.findViewById(R.id.rvChats);
         rvChats.setLayoutManager(new LinearLayoutManager(getContext()));
         chatAdapter = new ChatAdapter(chatList, chat -> {
+            // Proteger contra chatId null antes de abrir el detalle
+            if (chat.getId() == null) {
+                Toast.makeText(getContext(), "Chat no disponible", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent intent = new Intent(getActivity(), ChatDetailActivity.class);
-            intent.putExtra("chatId", chat.getId());
+            intent.putExtra("chatId", chat.getId().longValue());
             intent.putExtra("chatNombre", chat.getNombre());
             startActivity(intent);
         });

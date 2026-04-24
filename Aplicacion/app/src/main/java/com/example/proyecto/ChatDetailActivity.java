@@ -2,7 +2,6 @@ package com.example.proyecto;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +14,7 @@ import com.example.proyecto.model.MessageResponse;
 import com.example.proyecto.model.SendMessageRequest;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +28,10 @@ public class ChatDetailActivity extends AppCompatActivity {
     private RecyclerView rvMessages;
     private MessageAdapter messageAdapter;
     private List<MessageResponse> messageList = new ArrayList<>();
-    private EditText etMensaje;
+    private TextInputEditText etMensaje;
     private ApiService api;
     private String token;
-    private Long chatId;
+    private long chatId;
     private String myUsername;
 
     @Override
@@ -39,8 +39,15 @@ public class ChatDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_detail);
 
-        chatId = getIntent().getLongExtra("chatId", -1);
+        // Recoger datos del Intent de forma segura
+        chatId = getIntent().getLongExtra("chatId", -1L);
         String chatNombre = getIntent().getStringExtra("chatNombre");
+
+        if (chatId == -1L) {
+            Toast.makeText(this, "Error: chat no válido", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         SharedPreferences prefs = getSharedPreferences("Sesion", MODE_PRIVATE);
         token = "Bearer " + prefs.getString("token", "");
@@ -51,8 +58,10 @@ public class ChatDetailActivity extends AppCompatActivity {
         // Toolbar
         MaterialToolbar toolbar = findViewById(R.id.toolbarChatDetail);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(chatNombre);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(chatNombre != null ? chatNombre : "Chat");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         toolbar.setNavigationOnClickListener(v -> finish());
 
         // RecyclerView
@@ -63,9 +72,9 @@ public class ChatDetailActivity extends AppCompatActivity {
         messageAdapter = new MessageAdapter(messageList, myUsername);
         rvMessages.setAdapter(messageAdapter);
 
+        // Input y botón
         etMensaje = findViewById(R.id.etMensaje);
         MaterialButton btnEnviar = findViewById(R.id.btnEnviar);
-
         btnEnviar.setOnClickListener(v -> enviarMensaje());
 
         cargarMensajes();
@@ -82,16 +91,22 @@ public class ChatDetailActivity extends AppCompatActivity {
                     if (!messageList.isEmpty()) {
                         rvMessages.scrollToPosition(messageList.size() - 1);
                     }
+                } else {
+                    Toast.makeText(ChatDetailActivity.this,
+                            "No se pudieron cargar los mensajes", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<List<MessageResponse>> call, Throwable t) {
-                Toast.makeText(ChatDetailActivity.this, "Error al cargar mensajes", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChatDetailActivity.this,
+                        "Error de conexión", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void enviarMensaje() {
+        if (etMensaje == null || etMensaje.getText() == null) return;
         String content = etMensaje.getText().toString().trim();
         if (content.isEmpty()) return;
 
@@ -106,9 +121,11 @@ public class ChatDetailActivity extends AppCompatActivity {
                             rvMessages.scrollToPosition(messageList.size() - 1);
                         }
                     }
+
                     @Override
                     public void onFailure(Call<MessageResponse> call, Throwable t) {
-                        Toast.makeText(ChatDetailActivity.this, "Error al enviar", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ChatDetailActivity.this,
+                                "Error al enviar", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

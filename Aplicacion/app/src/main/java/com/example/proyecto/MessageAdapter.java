@@ -27,8 +27,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        return messages.get(position).getSenderUsername().equals(myUsername)
-                ? TYPE_SENT : TYPE_RECEIVED;
+        MessageResponse msg = messages.get(position);
+        String sender = msg.getSenderUsername();
+        // Si senderUsername es null o vacío, tratar como recibido
+        if (sender == null || sender.isEmpty()) return TYPE_RECEIVED;
+        return sender.equals(myUsername) ? TYPE_SENT : TYPE_RECEIVED;
     }
 
     @NonNull
@@ -48,21 +51,32 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         MessageResponse msg = messages.get(position);
-        String hora = msg.getSentAt() != null && msg.getSentAt().length() >= 16
-                ? msg.getSentAt().substring(11, 16) : "";
+
+        // Hora: protegido contra null y cadenas cortas
+        String hora = "";
+        if (msg.getSentAt() != null && msg.getSentAt().length() >= 16) {
+            hora = msg.getSentAt().substring(11, 16);
+        }
+
+        // Contenido: protegido contra null
+        String content = msg.getContent() != null ? msg.getContent() : "";
 
         if (holder instanceof SentViewHolder) {
-            ((SentViewHolder) holder).tvContent.setText(msg.getContent());
-            ((SentViewHolder) holder).tvHora.setText(hora);
+            SentViewHolder h = (SentViewHolder) holder;
+            h.tvContent.setText(content);
+            h.tvHora.setText(hora);
         } else {
-            ((ReceivedViewHolder) holder).tvContent.setText(msg.getContent());
-            ((ReceivedViewHolder) holder).tvSender.setText(msg.getSenderUsername());
-            ((ReceivedViewHolder) holder).tvHora.setText(hora);
+            ReceivedViewHolder h = (ReceivedViewHolder) holder;
+            h.tvContent.setText(content);
+            h.tvSender.setText(msg.getSenderUsername() != null ? msg.getSenderUsername() : "");
+            h.tvHora.setText(hora);
         }
     }
 
     @Override
-    public int getItemCount() { return messages.size(); }
+    public int getItemCount() {
+        return messages != null ? messages.size() : 0;
+    }
 
     static class SentViewHolder extends RecyclerView.ViewHolder {
         TextView tvContent, tvHora;
