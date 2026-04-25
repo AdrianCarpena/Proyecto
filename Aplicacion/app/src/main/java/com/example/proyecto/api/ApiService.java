@@ -1,6 +1,9 @@
 package com.example.proyecto.api;
 
 import com.example.proyecto.model.AuthResponse;
+import com.example.proyecto.model.BusyHoursRequest;
+import com.example.proyecto.model.BusyHoursResponse;
+import com.example.proyecto.model.CalendarEventResponse;
 import com.example.proyecto.model.ChatResponse;
 import com.example.proyecto.model.CreateChatRequest;
 import com.example.proyecto.model.ExamenRequest;
@@ -57,6 +60,17 @@ public interface ApiService {
     Call<StudySessionResponse> completarSesion(
             @Header("Authorization") String token,
             @Path("id") Long id
+    );
+
+    @GET("calendar")
+    Call<List<CalendarEventResponse>> getCalendar(
+            @Header("Authorization") String token
+    );
+
+    @POST("busy-slots")
+    Call<BusyHoursResponse> createBusy(
+            @Header("Authorization") String token,
+            @Body BusyHoursRequest request
     );
 
     @POST("chats")
