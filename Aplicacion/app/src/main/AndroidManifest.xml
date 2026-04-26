@@ -35,7 +35,7 @@
             android:label="Perfil"
             android:parentActivityName=".HomeActivity">
         </activity>
-
+        <activity android:name=".ChatDetailActivity"/>
     </application>
 
 </manifest>

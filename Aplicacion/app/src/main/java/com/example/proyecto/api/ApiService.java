@@ -4,10 +4,15 @@ import com.example.proyecto.model.AuthResponse;
 import com.example.proyecto.model.BusyHoursRequest;
 import com.example.proyecto.model.BusyHoursResponse;
 import com.example.proyecto.model.CalendarEventResponse;
+import com.example.proyecto.model.ChatResponse;
+import com.example.proyecto.model.CreateChatRequest;
 import com.example.proyecto.model.ExamenRequest;
 import com.example.proyecto.model.ExamenResponse;
+import com.example.proyecto.model.JoinChatRequest;
 import com.example.proyecto.model.LoginRequest;
 import com.example.proyecto.model.LoginResponse;
+import com.example.proyecto.model.MessageResponse;
+import com.example.proyecto.model.SendMessageRequest;
 import com.example.proyecto.model.StudySessionResponse;
 import com.example.proyecto.model.TareaRequest;
 import com.example.proyecto.model.TareaResponse;
@@ -67,4 +72,23 @@ public interface ApiService {
             @Header("Authorization") String token,
             @Body BusyHoursRequest request
     );
+    @POST("chats")
+    Call<ChatResponse> createChat(@Header("Authorization") String token,
+                                  @Body CreateChatRequest request);
+
+    @POST("chats/join")
+    Call<ChatResponse> joinChat(@Header("Authorization") String token,
+                                @Body JoinChatRequest request);
+
+    @GET("chats")
+    Call<List<ChatResponse>> getChats(@Header("Authorization") String token);
+
+    @GET("chats/{chatId}/messages")
+    Call<List<MessageResponse>> getMessages(@Header("Authorization") String token,
+                                            @Path("chatId") Long chatId);
+
+    @POST("chats/{chatId}/messages")
+    Call<MessageResponse> sendMessage(@Header("Authorization") String token,
+                                      @Path("chatId") Long chatId,
+                                      @Body SendMessageRequest request);
 }
