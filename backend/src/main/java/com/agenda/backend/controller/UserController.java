@@ -6,6 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.agenda.backend.dto.ChangePasswordRequestDTO;
+import com.agenda.backend.dto.ChangeUsernameRequestDTO;
+import com.agenda.backend.dto.UserProfileDTO;
+import com.agenda.backend.dto.UserProfileWithTokenDTO;
 import com.agenda.backend.model.User;
 import com.agenda.backend.repository.UserRepository;
 import com.agenda.backend.service.UserService;
@@ -30,5 +34,25 @@ public class UserController {
         User user = getUser(principal);
         userService.deleteOwnUser(user);
         return ResponseEntity.ok("Usuario eliminado correctamente");
+    }
+    
+    @GetMapping("/me")
+    public ResponseEntity<UserProfileDTO> getMe(Principal principal) {
+        User user = getUser(principal);
+        return ResponseEntity.ok(userService.getMyProfile(user));
+    }
+    
+    @PatchMapping("/me/username")
+    public ResponseEntity<UserProfileWithTokenDTO> changeUsername(@RequestBody ChangeUsernameRequestDTO request,
+                                                                  Principal principal) {
+        User user = getUser(principal);
+        return ResponseEntity.ok(userService.changeUsername(user, request.getNewUsername()));
+    }
+    
+    @PatchMapping("/me/password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDTO request,Principal principal) {
+        User user = getUser(principal);
+        userService.changePassword(user, request.getCurrentPassword(), request.getNewPassword());
+        return ResponseEntity.ok("Contraseña actualizada correctamente");
     }
 }

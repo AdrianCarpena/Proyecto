@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.agenda.backend.dto.ChatJoinCodeDTO;
 import com.agenda.backend.dto.ChatMemberDTO;
 import com.agenda.backend.dto.ChatResponseDTO;
 import com.agenda.backend.dto.CreateChatRequestDTO;
@@ -142,6 +143,17 @@ public class ChatService {
     //Metodo para generar el codigo de un chat
     private String generateJoinCode() {
         return UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    }
+    
+    //Metodo para obtener el codigo de union de un chat
+    public ChatJoinCodeDTO getJoinCode(Long chatId, User user) {
+
+        Chat chat = chatRepository.findById(chatId)
+                .orElseThrow(() -> new RuntimeException("Chat no encontrado"));
+
+        ensureUserIsMember(chat, user);
+
+        return new ChatJoinCodeDTO(chat.getId(), chat.getJoinCode());
     }
 
     //Metodo para transformar un chat y su numero de miembros a un objeto del tipo ChatResponseDTO

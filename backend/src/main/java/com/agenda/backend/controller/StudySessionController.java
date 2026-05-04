@@ -2,6 +2,7 @@ package com.agenda.backend.controller;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +54,20 @@ public class StudySessionController {
                 examenId,
                 tareaId,
                 asignatura
+        );
+    }
+
+    @GetMapping
+    public ResponseEntity<List<StudySessionResponseDTO>> getSessions(Principal principal) {
+
+        User user = getUser(principal);
+
+        List<StudySession> sessions = studySessionService.findByUser(user);
+
+        return ResponseEntity.ok(
+                sessions.stream()
+                        .map(this::toDTO)
+                        .toList()
         );
     }
 

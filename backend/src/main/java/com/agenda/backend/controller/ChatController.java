@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.agenda.backend.dto.ChatJoinCodeDTO;
 import com.agenda.backend.dto.ChatMemberDTO;
 import com.agenda.backend.dto.ChatResponseDTO;
 import com.agenda.backend.dto.CreateChatRequestDTO;
@@ -74,5 +75,12 @@ public class ChatController {
         User user = getUser(principal);
         chatService.removeMember(chatId, memberId, user);
         return ResponseEntity.ok("Miembro expulsado correctamente");
+    }
+    
+    @GetMapping("/{chatId}/join-code")
+    public ResponseEntity<ChatJoinCodeDTO> getJoinCode(@PathVariable Long chatId,
+                                                       Principal principal) {
+        User user = getUser(principal);
+        return ResponseEntity.ok(chatService.getJoinCode(chatId, user));
     }
 }

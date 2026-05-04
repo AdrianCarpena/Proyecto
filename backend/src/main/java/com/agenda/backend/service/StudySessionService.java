@@ -1,6 +1,7 @@
 package com.agenda.backend.service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,9 @@ public class StudySessionService {
 
         session.setCheck(true);
         return studySessionRepository.save(session);
+    }
+    public List<StudySession> findByUser(User user) {
+        return studySessionRepository.findByUser(user);
     }
 
     // 🔁 Mover sesión a otro día
