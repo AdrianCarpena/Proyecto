@@ -1,0 +1,12 @@
+Para el servidor. Cambiar el username y password al de tu base de datos en:
+Servidor/backend/src/main/resources/application.properties
+	spring.datasource.username=root
+	spring.datasource.password=root
+
+Para la aplicaión. Cambiar la ip a la de tu red wifi en (si estas usando emulador no cambiar nada):
+Aplicacion/app/src/main/java/com/example/proyecto/api/RetrofitClient.java
+
+	private static final String BASE_URL = "http://10.0.2.2:8080/";
+
+
+
