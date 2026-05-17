@@ -155,6 +155,25 @@ public class ChatService {
 
         return new ChatJoinCodeDTO(chat.getId(), chat.getJoinCode());
     }
+    
+    //Metodo para abandonar un chat
+    public void leaveChat(Long chatId, User user) {
+
+        Chat chat = chatRepository.findById(chatId)
+                .orElseThrow(() -> new RuntimeException("Chat no encontrado"));
+
+        ChatMembership membership = chatMembershipRepository.findByChatAndUser(chat, user)
+                .orElseThrow(() -> new RuntimeException("No perteneces a este chat"));
+
+        // Si el que abandona es el creador, se elimina el chat completo
+        if (chat.getCreator().getId().equals(user.getId())) {
+            chatRepository.delete(chat);
+            return;
+        }
+
+        // Si es miembro normal, solo se elimina su relación con el chat
+        chatMembershipRepository.delete(membership);
+    }
 
     //Metodo para transformar un chat y su numero de miembros a un objeto del tipo ChatResponseDTO
     private ChatResponseDTO toChatResponseDTO(Chat chat, int memberCount) {
@@ -168,4 +187,5 @@ public class ChatService {
                 chat.getCreatedAt()
         );
     }
+    
 }

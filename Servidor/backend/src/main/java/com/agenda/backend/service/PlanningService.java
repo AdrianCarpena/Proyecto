@@ -41,22 +41,34 @@ public class PlanningService {
 
 	    for (StudySession session : sesiones) {
 
-	        // Solo sesiones pasadas y no hechas
 	        if (!session.isCheck() && session.getFecha().isBefore(hoy)) {
+
+	            LocalDate fechaLimite = obtenerFechaLimiteSesion(session);
+
+	            if (fechaLimite == null) {
+	                continue;
+	            }
 
 	            LocalDate dia1 = hoy;
 	            LocalDate dia2 = hoy.plusDays(1);
 
-	            int cargaDia1 = calcularCargaDia(user, dia1);
-	            int cargaDia2 = calcularCargaDia(user, dia2);
+	            List<LocalDate> opciones = new ArrayList<>();
 
-	            LocalDate nuevoDia;
-
-	            if (cargaDia1 <= cargaDia2) {
-	                nuevoDia = dia1;
-	            } else {
-	                nuevoDia = dia2;
+	            if (!dia1.isAfter(fechaLimite)) {
+	                opciones.add(dia1);
 	            }
+
+	            if (!dia2.isAfter(fechaLimite)) {
+	                opciones.add(dia2);
+	            }
+
+	            if (opciones.isEmpty()) {
+	                continue;
+	            }
+
+	            LocalDate nuevoDia = opciones.stream()
+	                    .min(Comparator.comparingInt(dia -> calcularCargaDia(user, dia)))
+	                    .orElse(dia1);
 
 	            session.setFecha(nuevoDia);
 	            studySessionRepository.save(session);
@@ -358,6 +370,19 @@ public class PlanningService {
 	    return horasBase + extra;
 	}
 	
+	
+	private LocalDate obtenerFechaLimiteSesion(StudySession session) {
+
+	    if (session.getExamen() != null) {
+	        return session.getExamen().getFecha().minusDays(1);
+	    }
+
+	    if (session.getTarea() != null) {
+	        return session.getTarea().getFecha().minusDays(1);
+	    }
+
+	    return null;
+	}
 	
 
 }

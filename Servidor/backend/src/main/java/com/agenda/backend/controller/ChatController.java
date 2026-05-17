@@ -83,4 +83,11 @@ public class ChatController {
         User user = getUser(principal);
         return ResponseEntity.ok(chatService.getJoinCode(chatId, user));
     }
+    
+    @DeleteMapping("/{chatId}/leave")
+    public ResponseEntity<?> leaveChat(@PathVariable Long chatId, Principal principal) {
+        User user = getUser(principal);
+        chatService.leaveChat(chatId, user);
+        return ResponseEntity.ok("Has abandonado el chat correctamente");
+    }
 }
