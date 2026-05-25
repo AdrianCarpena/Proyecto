@@ -5,159 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f831ba9c-7d57-44e8-a21f-0609dbcc1f0c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../../Aplicacion/app/src/main/java/com/example/proyecto/model/ChangePasswordRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Aplicacion/app/src/main/java/com/example/proyecto/model/ChangeUsernameRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Aplicacion/app/src/main/java/com/example/proyecto/model/UserProfileResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Aplicacion/app/src/main/java/com/example/proyecto/model/UserProfileWithTokenResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Aplicacion/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Aplicacion/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HELP.md" beforeDir="false" afterPath="$PROJECT_DIR$/HELP.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" afterPath="$PROJECT_DIR$/mvnw" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/BackendApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/BackendApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/algorithm/Planifiable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/algorithm/Planifiable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/config/WebSocketConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/config/WebSocketConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/BusyHoursController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/BusyHoursController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/CalendarController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/CalendarController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/ChatController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/ChatController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/ChatMessageWebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/ChatMessageWebSocketController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/ExamenController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/ExamenController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/MessageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/MessageController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/StudySessionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/StudySessionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/TareaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/TareaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/AuthRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/AuthRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/AuthResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/AuthResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/BusyHoursResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/BusyHoursResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/CalendarEventDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/CalendarEventDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/ChatMemberDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/ChatMemberDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/ChatResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/ChatResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/CreateChatRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/CreateChatRequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/ErrorResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/ErrorResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/ExamenResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/ExamenResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/JoinChatRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/JoinChatRequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/LoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/LoginRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/MessageResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/MessageResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/RegisterRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/RegisterRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/SendMessageRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/SendMessageRequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/StudySessionResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/StudySessionResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/TareaResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/dto/TareaResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/exception/ConflictException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/exception/ConflictException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/exception/ForbiddenException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/exception/ForbiddenException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/exception/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/BusyHours.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/BusyHours.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/Chat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/Chat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/ChatMembership.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/ChatMembership.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/Examen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/Examen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/Message.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/StudySession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/StudySession.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/Tarea.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/Tarea.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/enums/Dificultad.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/enums/Dificultad.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/enums/Prioridad.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/model/enums/Prioridad.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/repository/BusyHoursRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/repository/BusyHoursRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/repository/ChatMembershipRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/repository/ChatMembershipRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/repository/ChatRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/repository/ChatRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/repository/ExamenRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/repository/ExamenRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/repository/MessageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/repository/MessageRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/repository/StudySessionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/repository/StudySessionRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/repository/TareaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/repository/TareaRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/security/AuthEntryPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/security/AuthEntryPoint.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/security/JwtAuthFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/security/JwtAuthFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/security/JwtUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/security/JwtUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/security/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/AuthService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/BusyHoursService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/BusyHoursService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/CalendarService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/CalendarService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/ChatService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/ChatService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/ExamenService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/ExamenService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/MessageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/MessageService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/PlanningService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/PlanningService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/StudySessionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/StudySessionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/TareaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/TareaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/agenda/backend/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/agenda/backend/BackendApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/agenda/backend/BackendApplicationTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/maven/com.agenda/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/META-INF/maven/com.agenda/backend/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/BackendApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/agenda/backend/BackendApplication.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/algorithm/Planifiable.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/config/WebSocketConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/controller/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/agenda/backend/controller/AuthController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/controller/BusyHoursController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/controller/CalendarController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/controller/ChatController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/controller/ChatMessageWebSocketController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/controller/ExamenController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/controller/MessageController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/controller/StudySessionController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/controller/TareaController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/controller/UserController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/AuthRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/AuthRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/AuthResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/BusyHoursResponseDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/CalendarEventDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/ChangePasswordRequestDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/ChangeUsernameRequestDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/ChatJoinCodeDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/ChatMemberDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/ChatResponseDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/CreateChatRequestDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/ErrorResponseDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/ExamenResponseDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/JoinChatRequestDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/LoginRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/MessageResponseDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/RegisterRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/SendMessageRequestDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/StudySessionResponseDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/TareaResponseDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/UserProfileDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/dto/UserProfileWithTokenDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/exception/ConflictException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/exception/ForbiddenException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/exception/GlobalExceptionHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/model/BusyHours$BusyHoursBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/model/BusyHours.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/model/Chat.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/model/ChatMembership.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/model/Examen$ExamenBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/model/Examen.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/model/Message.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/model/StudySession$StudySessionBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/model/StudySession.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/model/Tarea$TareaBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/model/Tarea.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/model/User$UserBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/agenda/backend/model/User.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/model/enums/Dificultad.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/model/enums/Prioridad.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/repository/BusyHoursRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/repository/ChatMembershipRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/repository/ChatRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/repository/ExamenRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/repository/MessageRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/repository/StudySessionRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/repository/TareaRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/repository/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/agenda/backend/repository/UserRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/security/AuthEntryPoint.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/agenda/backend/security/AuthEntryPoint.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/security/JwtAuthFilter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/security/JwtUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/agenda/backend/security/JwtUtils.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/security/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/agenda/backend/security/SecurityConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/service/AuthService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/agenda/backend/service/AuthService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/service/BusyHoursService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/service/CalendarService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/service/ChatService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/service/ExamenService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/service/MessageService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/service/PlanningService$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/service/PlanningService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/service/StudySessionService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/service/TareaService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/agenda/backend/service/UserService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Aplicacion/app/src/main/java/com/example/proyecto/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Aplicacion/app/src/main/java/com/example/proyecto/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Aplicacion/app/src/main/java/com/example/proyecto/api/ApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Aplicacion/app/src/main/java/com/example/proyecto/api/ApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Aplicacion/app/src/main/java/com/example/proyecto/api/RetrofitClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Aplicacion/app/src/main/java/com/example/proyecto/api/RetrofitClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,9 +24,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="3DppM4HeFvP8NTXPrAdocWgsVq8" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -183,9 +40,16 @@
     "git-widget-placeholder": "Samuel",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/samue/Documents/el ultimo proyecto/Servidor/backend"
+    "last_opened_file_path": "C:/Users/USR/Documents/fase3/Servidor/backend"
   }
 }]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26830.84" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="f831ba9c-7d57-44e8-a21f-0609dbcc1f0c" name="Changes" comment="" />

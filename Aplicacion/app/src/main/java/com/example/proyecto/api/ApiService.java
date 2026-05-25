@@ -29,6 +29,10 @@ import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.DELETE;
+import com.example.proyecto.model.ChangePasswordRequest;
+import com.example.proyecto.model.ChangeUsernameRequest;
+import com.example.proyecto.model.UserProfileResponse;
+import com.example.proyecto.model.UserProfileWithTokenResponse;
 
 public interface ApiService {
 
@@ -114,6 +118,31 @@ public interface ApiService {
             @Header("Authorization") String token,
             @Path("chatId") Long chatId,
             @Path("memberId") Long memberId
+    );
+    @POST("sessions/reubicar")
+    Call<Void> reubicarSesionesNoHechas(
+            @Header("Authorization") String token
+    );
+    @GET("users/me")
+    Call<UserProfileResponse> getMyProfile(
+            @Header("Authorization") String token
+    );
+
+    @PATCH("users/me/username")
+    Call<UserProfileWithTokenResponse> changeUsername(
+            @Header("Authorization") String token,
+            @Body ChangeUsernameRequest request
+    );
+
+    @PATCH("users/me/password")
+    Call<Void> changePassword(
+            @Header("Authorization") String token,
+            @Body ChangePasswordRequest request
+    );
+
+    @DELETE("users/me")
+    Call<Void> deleteMyAccount(
+            @Header("Authorization") String token
     );
 
 }

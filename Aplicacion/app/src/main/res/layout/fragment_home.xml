@@ -23,7 +23,7 @@
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/hola_usuario_este_es_el_plan_del_d_a_a_por_ello" />
+                android:text="Hola Usuario, este es el plan del día, a por ello" />
 
             <!-- TAREAS -->
             <TextView

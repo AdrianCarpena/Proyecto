@@ -3,10 +3,6 @@ package com.example.proyecto;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +11,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
 import com.example.proyecto.api.ApiService;
 import com.example.proyecto.api.RetrofitClient;
 import com.example.proyecto.model.StudySessionResponse;
+import com.example.proyecto.model.UserProfileResponse;
 
 import java.util.Calendar;
 import java.util.List;
@@ -30,6 +29,7 @@ public class HomeFragment extends Fragment {
 
     private LinearLayout layoutEstudioHoy;
     private LinearLayout layoutTareasHoy;
+    private TextView tvSaludo;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,10 +39,51 @@ public class HomeFragment extends Fragment {
 
         layoutEstudioHoy = view.findViewById(R.id.layoutEstudioHoy);
         layoutTareasHoy = view.findViewById(R.id.layoutTareasHoy);
+        tvSaludo = view.findViewById(R.id.tvSaludo);
 
+        cargarUsuario();
         cargarSesionesHoy();
 
         return view;
+    }
+
+    private void cargarUsuario() {
+
+        SharedPreferences prefs =
+                requireContext().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
+
+        String token = prefs.getString("token", null);
+
+        if (token == null) return;
+
+        ApiService api =
+                RetrofitClient.getClient().create(ApiService.class);
+
+        api.getMyProfile("Bearer " + token)
+                .enqueue(new Callback<UserProfileResponse>() {
+
+                    @Override
+                    public void onResponse(Call<UserProfileResponse> call,
+                                           Response<UserProfileResponse> response) {
+
+                        if (response.isSuccessful()
+                                && response.body() != null) {
+
+                            String username = response.body().getUsername();
+
+                            tvSaludo.setText(
+                                    "Hola " +
+                                            username +
+                                            ", este es el plan del día, a por ello"
+                            );
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserProfileResponse> call, Throwable t) {
+
+                    }
+                });
     }
 
     private void cargarSesionesHoy() {
@@ -57,7 +98,8 @@ public class HomeFragment extends Fragment {
             return;
         }
 
-        ApiService api = RetrofitClient.getClient().create(ApiService.class);
+        ApiService api =
+                RetrofitClient.getClient().create(ApiService.class);
 
         api.getSessions("Bearer " + token)
                 .enqueue(new Callback<List<StudySessionResponse>>() {
@@ -99,7 +141,6 @@ public class HomeFragment extends Fragment {
 
                                     if (calSesion.equals(calHoy)) {
 
-                                        // 📌 SEPARACIÓN CORRECTA
                                         if (s.getExamenId() != null) {
                                             añadirSesionExamen(s);
                                         } else if (s.getTareaId() != null) {
@@ -142,7 +183,6 @@ public class HomeFragment extends Fragment {
 
         check.setChecked(s.isCheck());
 
-        // 🔥 BLOQUEO SI YA ESTÁ HECHA
         if (s.isCheck()) {
             check.setEnabled(false);
             check.setClickable(false);
@@ -151,7 +191,7 @@ public class HomeFragment extends Fragment {
         check.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked && !s.isCheck()) {
                 completarSesion(s.getId());
-                check.setEnabled(false); // 🔒 bloqueo inmediato
+                check.setEnabled(false);
             }
         });
 
@@ -170,7 +210,6 @@ public class HomeFragment extends Fragment {
 
         check.setChecked(s.isCheck());
 
-        // 🔥 BLOQUEO SI YA ESTÁ HECHA
         if (s.isCheck()) {
             check.setEnabled(false);
             check.setClickable(false);
@@ -179,7 +218,7 @@ public class HomeFragment extends Fragment {
         check.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked && !s.isCheck()) {
                 completarSesion(s.getId());
-                check.setEnabled(false); // 🔒 bloqueo inmediato
+                check.setEnabled(false);
             }
         });
 
@@ -194,7 +233,8 @@ public class HomeFragment extends Fragment {
         String token = prefs.getString("token", null);
         if (token == null) return;
 
-        ApiService api = RetrofitClient.getClient().create(ApiService.class);
+        ApiService api =
+                RetrofitClient.getClient().create(ApiService.class);
 
         api.completarSesion("Bearer " + token, id)
                 .enqueue(new Callback<StudySessionResponse>() {
@@ -205,18 +245,12 @@ public class HomeFragment extends Fragment {
 
                         if (response.isSuccessful()) {
                             cargarSesionesHoy();
-                        } else {
-                            Toast.makeText(getContext(),
-                                    "Error al completar",
-                                    Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<StudySessionResponse> call, Throwable t) {
-                        Toast.makeText(getContext(),
-                                "Error conexión",
-                                Toast.LENGTH_SHORT).show();
+
                     }
                 });
     }
