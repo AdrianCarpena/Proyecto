@@ -1,5 +1,6 @@
 package com.example.proyecto;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import com.example.proyecto.api.RetrofitClient;
 import com.example.proyecto.model.ChatJoinCodeResponse;
 import com.example.proyecto.model.ChatMemberResponse;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +71,9 @@ public class ChatInfoActivity extends AppCompatActivity {
 
         cargarJoinCode();
         cargarMiembros();
+
+        MaterialButton btnLeaveChat = findViewById(R.id.btnLeaveChat);
+        btnLeaveChat.setOnClickListener(v -> mostrarDialogoAbandonarChat());
     }
 
     private void cargarJoinCode() {
@@ -146,5 +151,47 @@ public class ChatInfoActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
+    }
+
+    private void mostrarDialogoAbandonarChat() {
+        new AlertDialog.Builder(this)
+                .setTitle("Abandonar chat")
+                .setMessage("¿Seguro que quieres abandonar este chat?")
+                .setPositiveButton("Abandonar", (dialog, which) -> abandonarChat())
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void abandonarChat() {
+        api.leaveChat(token, chatId)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(ChatInfoActivity.this,
+                                    "Has abandonado el chat",
+                                    Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(ChatInfoActivity.this, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            intent.putExtra("openFragment", "chats");
+                            startActivity(intent);
+
+                            setResult(RESULT_OK);
+                            finish();
+                        } else {
+                            Toast.makeText(ChatInfoActivity.this,
+                                    "No se pudo abandonar el chat",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(ChatInfoActivity.this,
+                                "Error de conexión",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

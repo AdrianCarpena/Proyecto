@@ -177,12 +177,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void abrirHome() {
-        startActivity(
-                new Intent(
-                        MainActivity.this,
-                        HomeActivity.class
-                )
-        );
+
+        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+
+        String openFragment = getIntent().getStringExtra("openFragment");
+
+        if (openFragment != null) {
+            intent.putExtra("openFragment", openFragment);
+        }
+
+        startActivity(intent);
         finish();
     }
 }

@@ -93,6 +93,13 @@ public class HomeActivity extends AppCompatActivity {
             return true;
         });
 
+        String openFragment = getIntent().getStringExtra("openFragment");
+
+        if ("chats".equals(openFragment)) {
+            viewPager.setCurrentItem(4, false);
+            bottomNav.setSelectedItemId(R.id.nav_chat);
+        }
+
     }
 
     // 🔹 Toolbar menu

@@ -145,4 +145,10 @@ public interface ApiService {
             @Header("Authorization") String token
     );
 
+    @DELETE("chats/{chatId}/leave")
+    Call<Void> leaveChat(
+            @Header("Authorization") String token,
+            @Path("chatId") Long chatId
+    );
+
 }
