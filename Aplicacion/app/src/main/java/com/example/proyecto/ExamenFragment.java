@@ -3,9 +3,6 @@ package com.example.proyecto;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -16,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.example.proyecto.api.ApiService;
 import com.example.proyecto.api.RetrofitClient;
@@ -28,7 +27,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 
 public class ExamenFragment extends Fragment {
 
@@ -64,10 +62,20 @@ public class ExamenFragment extends Fragment {
         View dialogView = LayoutInflater.from(getContext())
                 .inflate(R.layout.dialog_crear_examen, null);
 
-        EditText etAsignatura = dialogView.findViewById(R.id.etAsignatura);
-        EditText etFecha = dialogView.findViewById(R.id.etFecha);
-        Spinner spPrioridad = dialogView.findViewById(R.id.spPrioridad);
-        Spinner spDificultad = dialogView.findViewById(R.id.spDificultad);
+        EditText etAsignatura =
+                dialogView.findViewById(R.id.etAsignatura);
+
+        EditText etFecha =
+                dialogView.findViewById(R.id.etFecha);
+
+        EditText etHorasEstimadas =
+                dialogView.findViewById(R.id.etHorasEstimadas);
+
+        Spinner spPrioridad =
+                dialogView.findViewById(R.id.spPrioridad);
+
+        Spinner spDificultad =
+                dialogView.findViewById(R.id.spDificultad);
 
         String[] prioridades = {"ALTA", "MEDIA", "BAJA"};
         String[] dificultades = {"DIFICIL", "MEDIA", "FACIL"};
@@ -89,21 +97,25 @@ public class ExamenFragment extends Fragment {
 
             java.util.Calendar c = java.util.Calendar.getInstance();
 
-            android.app.DatePickerDialog dialog = new android.app.DatePickerDialog(
-                    getContext(),
-                    (view, year, month, day) -> {
-                        String fecha = year + "-" +
-                                String.format("%02d", month + 1) + "-" +
-                                String.format("%02d", day);
-                        etFecha.setText(fecha);
-                    },
-                    c.get(java.util.Calendar.YEAR),
-                    c.get(java.util.Calendar.MONTH),
-                    c.get(java.util.Calendar.DAY_OF_MONTH)
-            );
+            android.app.DatePickerDialog dialog =
+                    new android.app.DatePickerDialog(
+                            getContext(),
+                            (view, year, month, day) -> {
 
-            // SOLO FUTURO
-            dialog.getDatePicker().setMinDate(System.currentTimeMillis() + 86400000);
+                                String fecha = year + "-" +
+                                        String.format("%02d", month + 1) + "-" +
+                                        String.format("%02d", day);
+
+                                etFecha.setText(fecha);
+                            },
+                            c.get(java.util.Calendar.YEAR),
+                            c.get(java.util.Calendar.MONTH),
+                            c.get(java.util.Calendar.DAY_OF_MONTH)
+                    );
+
+            // Solo futuro (mínimo mañana)
+            dialog.getDatePicker()
+                    .setMinDate(System.currentTimeMillis() + 86400000);
 
             dialog.show();
         });
@@ -113,64 +125,121 @@ public class ExamenFragment extends Fragment {
                 .setView(dialogView)
                 .setPositiveButton("Crear", (dialog, which) -> {
 
+                    String asignatura =
+                            etAsignatura.getText().toString().trim();
+
+                    String fecha =
+                            etFecha.getText().toString().trim();
+
+                    String horasTexto =
+                            etHorasEstimadas.getText().toString().trim();
+
+                    if (asignatura.isEmpty()
+                            || fecha.isEmpty()
+                            || horasTexto.isEmpty()) {
+
+                        Toast.makeText(getContext(),
+                                "Completa todos los campos",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    int horasEstimadas;
+
+                    try {
+                        horasEstimadas =
+                                Integer.parseInt(horasTexto);
+                    } catch (Exception e) {
+
+                        Toast.makeText(getContext(),
+                                "Horas inválidas",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     crearExamen(
-                            etAsignatura.getText().toString(),
-                            etFecha.getText().toString(),
+                            asignatura,
+                            fecha,
                             spPrioridad.getSelectedItem().toString(),
-                            spDificultad.getSelectedItem().toString()
+                            spDificultad.getSelectedItem().toString(),
+                            horasEstimadas
                     );
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
 
-    private void crearExamen(String asignatura, String fecha, String prioridad, String dificultad) {
+    private void crearExamen(String asignatura,
+                             String fecha,
+                             String prioridad,
+                             String dificultad,
+                             Integer horasEstimadas) {
 
-        SharedPreferences prefs = getActivity()
+        SharedPreferences prefs = requireActivity()
                 .getSharedPreferences("Sesion", Context.MODE_PRIVATE);
 
         String token = prefs.getString("token", null);
 
         if (token == null) return;
 
-        ApiService api = RetrofitClient.getClient().create(ApiService.class);
+        ApiService api =
+                RetrofitClient.getClient().create(ApiService.class);
 
         ExamenRequest request = new ExamenRequest(
                 asignatura,
                 fecha,
                 prioridad,
-                dificultad
+                dificultad,
+                horasEstimadas
         );
 
         api.createExam("Bearer " + token, request)
-                .enqueue(new retrofit2.Callback<ExamenResponse>() {
+                .enqueue(new Callback<ExamenResponse>() {
 
                     @Override
-                    public void onResponse(Call<ExamenResponse> call, Response<ExamenResponse> response) {
+                    public void onResponse(
+                            Call<ExamenResponse> call,
+                            Response<ExamenResponse> response) {
 
                         Toast.makeText(getContext(),
                                 "CODE: " + response.code(),
                                 Toast.LENGTH_SHORT).show();
 
-                        Log.e("EXAM", "CODE: " + response.code());
+                        Log.e("EXAM",
+                                "CODE: " + response.code());
 
                         if (response.errorBody() != null) {
                             try {
-                                Log.e("EXAM", response.errorBody().string());
+                                Log.e("EXAM",
+                                        response.errorBody().string());
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
 
                         if (response.isSuccessful()) {
-                            Log.d("EXAM", "CREADO OK");
+
+                            Log.d("EXAM",
+                                    "CREADO OK");
+
+                            Toast.makeText(getContext(),
+                                    "Examen creado",
+                                    Toast.LENGTH_SHORT).show();
+
                             cargarExamenes();
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<ExamenResponse> call, Throwable t) {
+                    public void onFailure(
+                            Call<ExamenResponse> call,
+                            Throwable t) {
+
                         Log.e("EXAM", t.getMessage());
+
+                        Toast.makeText(getContext(),
+                                "Error conexión",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -178,71 +247,102 @@ public class ExamenFragment extends Fragment {
     private void cargarExamenes() {
 
         SharedPreferences prefs =
-                requireContext().getSharedPreferences("Sesion", Context.MODE_PRIVATE);
+                requireContext().getSharedPreferences(
+                        "Sesion",
+                        Context.MODE_PRIVATE
+                );
 
         String token = prefs.getString("token", null);
 
         if (token == null || token.trim().isEmpty()) {
+
             Toast.makeText(getContext(),
                     "Sesión inválida (token vacío)",
                     Toast.LENGTH_SHORT).show();
+
             return;
         }
 
         token = token.trim();
 
-        ApiService api = RetrofitClient.getClient().create(ApiService.class);
+        ApiService api =
+                RetrofitClient.getClient().create(ApiService.class);
 
-        api.getExams("Bearer " + token).enqueue(new Callback<List<ExamenResponse>>() {
+        api.getExams("Bearer " + token)
+                .enqueue(new Callback<List<ExamenResponse>>() {
 
-            @Override
-            public void onResponse(Call<List<ExamenResponse>> call,
-                                   Response<List<ExamenResponse>> response) {
+                    @Override
+                    public void onResponse(
+                            Call<List<ExamenResponse>> call,
+                            Response<List<ExamenResponse>> response) {
 
-                if (response.isSuccessful() && response.body() != null) {
+                        if (response.isSuccessful()
+                                && response.body() != null) {
 
-                    layoutHoy.removeAllViews();
-                    layoutSemana.removeAllViews();
+                            layoutHoy.removeAllViews();
+                            layoutSemana.removeAllViews();
 
-                    for (ExamenResponse e : response.body()) {
+                            for (ExamenResponse e : response.body()) {
 
-                        if (esHoy(e.getFecha())) {
-                            añadirVista(layoutHoy, e);
-                        } else if (esSemana(e.getFecha())) {
-                            añadirVista(layoutSemana, e);
+                                if (esHoy(e.getFecha())) {
+                                    añadirVista(layoutHoy, e);
+
+                                } else if (esSemana(e.getFecha())) {
+                                    añadirVista(layoutSemana, e);
+                                }
+                            }
                         }
                     }
-                }
-            }
 
-            @Override
-            public void onFailure(Call<List<ExamenResponse>> call, Throwable t) {
-                Log.e("EXAMS", t.getMessage());
-            }
-        });
+                    @Override
+                    public void onFailure(
+                            Call<List<ExamenResponse>> call,
+                            Throwable t) {
+
+                        Log.e("EXAMS", t.getMessage());
+                    }
+                });
     }
 
-    private void añadirVista(LinearLayout layout, ExamenResponse examen) {
+    private void añadirVista(
+            LinearLayout layout,
+            ExamenResponse examen) {
 
         View item = LayoutInflater.from(getContext())
                 .inflate(R.layout.item_examen, layout, false);
 
-        TextView tvAsignatura = item.findViewById(R.id.tvAsignatura);
-        TextView tvFecha = item.findViewById(R.id.tvFecha);
-        TextView tvInfo = item.findViewById(R.id.tvInfo);
+        TextView tvAsignatura =
+                item.findViewById(R.id.tvAsignatura);
+
+        TextView tvFecha =
+                item.findViewById(R.id.tvFecha);
+
+        TextView tvInfo =
+                item.findViewById(R.id.tvInfo);
 
         tvAsignatura.setText(examen.getAsignatura());
-        tvFecha.setText(getString(R.string.fecha) + getString(R.string.dospuntos) + examen.getFecha());
+
+        tvFecha.setText(
+                getString(R.string.fecha)
+                        + getString(R.string.dospuntos)
+                        + examen.getFecha()
+        );
 
         tvInfo.setText(
-                getString(R.string.prioridad) + getString(R.string.dospuntos) + examen.getPrioridad() +
-                        " | " +
-                        getString(R.string.dificultad) + getString(R.string.dospuntos) + examen.getDificultad()
+                getString(R.string.prioridad)
+                        + getString(R.string.dospuntos)
+                        + examen.getPrioridad()
+                        + " | "
+                        + getString(R.string.dificultad)
+                        + getString(R.string.dospuntos)
+                        + examen.getDificultad()
+                        + " | "
+                        + "Horas: "
+                        + examen.getHorasEstimadas()
         );
 
         layout.addView(item);
     }
-
 
     private boolean esHoy(String fecha) {
 
@@ -257,25 +357,37 @@ public class ExamenFragment extends Fragment {
     private boolean esSemana(String fecha) {
 
         try {
+
             java.text.SimpleDateFormat sdf =
-                    new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault());
+                    new java.text.SimpleDateFormat(
+                            "yyyy-MM-dd",
+                            java.util.Locale.getDefault()
+                    );
 
-            java.util.Date fechaExamen = sdf.parse(fecha);
+            java.util.Date fechaExamen =
+                    sdf.parse(fecha);
 
-            java.util.Calendar hoy = java.util.Calendar.getInstance();
+            java.util.Calendar hoy =
+                    java.util.Calendar.getInstance();
+
             hoy.set(java.util.Calendar.HOUR_OF_DAY, 0);
             hoy.set(java.util.Calendar.MINUTE, 0);
             hoy.set(java.util.Calendar.SECOND, 0);
             hoy.set(java.util.Calendar.MILLISECOND, 0);
 
-            java.util.Calendar limite = java.util.Calendar.getInstance();
+            java.util.Calendar limite =
+                    java.util.Calendar.getInstance();
+
             limite.setTime(hoy.getTime());
             limite.add(java.util.Calendar.DAY_OF_YEAR, 7);
 
-            java.util.Calendar examen = java.util.Calendar.getInstance();
+            java.util.Calendar examen =
+                    java.util.Calendar.getInstance();
+
             examen.setTime(fechaExamen);
 
-            return examen.after(hoy) && examen.before(limite);
+            return examen.after(hoy)
+                    && examen.before(limite);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -284,7 +396,9 @@ public class ExamenFragment extends Fragment {
     }
 
     @Override
-    public void onConfigurationChanged(android.content.res.Configuration newConfig) {
+    public void onConfigurationChanged(
+            android.content.res.Configuration newConfig) {
+
         super.onConfigurationChanged(newConfig);
 
         layoutHoy.removeAllViews();
@@ -292,6 +406,4 @@ public class ExamenFragment extends Fragment {
 
         cargarExamenes();
     }
-
-
 }

@@ -5,12 +5,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    //private static final String BASE_URL = "http://10.53.238.167:8080/";
-    private static final String BASE_URL = "http://10.0.2.2:8080/";
+    private static final String BASE_URL = "http://10.115.135.167:8080/";
+    //private static final String BASE_URL = "http://10.0.2.2:8080/";
 
+    public static final String WS_URL = "ws://10.115.135.167:8080/ws-chat";
+    //public static final String WS_URL = "ws://10.0.2.2:8080/ws-chat";
 
-    public static final String WS_URL = "ws://10.0.2.2:8080/ws-chat";
-    //public static final String WS_URL = "ws://10.53.238.167:8080/ws-chat";
 
 
     private static Retrofit retrofit;
