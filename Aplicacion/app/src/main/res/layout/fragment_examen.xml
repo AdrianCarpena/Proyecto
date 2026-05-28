@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 🔥 SCROLL -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Título -->
+            <TextView
+                android:id="@+id/tvTitulo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/proximos_examenes"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:padding="16dp" />
+
+            <!-- Hoy -->
+            <TextView
+                android:id="@+id/tvHoy"
+                android:layout_below="@id/tvTitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hoy"
+                android:textStyle="bold"
+                android:paddingStart="16dp" />
+
+            <!-- Lista hoy -->
+            <LinearLayout
+                android:id="@+id/layoutHoy"
+                android:layout_below="@id/tvHoy"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!-- Semana -->
+            <TextView
+                android:id="@+id/tvSemana"
+                android:layout_below="@id/layoutHoy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/esta_semana"
+                android:textStyle="bold"
+                android:paddingStart="16dp"
+                android:layout_marginTop="16dp"/>
+
+            <!-- Lista semana -->
+            <LinearLayout
+                android:id="@+id/layoutSemana"
+                android:layout_below="@id/tvSemana"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <!-- 🔥 FAB FIJO (fuera del ScrollView) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabCrear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_input_add" />
+
+</FrameLayout>
