@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topBarProfile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:title="@string/perfil"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Contenido -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/topBarProfile"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/optionsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp">
+
+            <!-- Username actual -->
+            <TextView
+                android:id="@+id/tvUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/usuario"
+                android:textAlignment="center"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="32dp"/>
+
+            <!-- Dark mode -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/modo_oscuro_claro"
+                    android:textSize="16sp"/>
+
+                <Switch
+                    android:id="@+id/switchDarkMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <!-- Idioma -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/idioma"
+                    android:textSize="16sp"/>
+
+                <Spinner
+                    android:id="@+id/spinnerLanguage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <!-- Cambiar username -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnChangeUsername"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cambiar_nombre_de_usuario"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Cambiar contraseña -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnChangePassword"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cambiar_contraseña"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Logout -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogout"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cerrar_sesi_n"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Delete account -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDeleteAccount"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/borrar_cuenta"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,181 @@
+package com.example.proyecto.api;
+
+import com.example.proyecto.model.AuthResponse;
+import com.example.proyecto.model.BusyHoursRequest;
+import com.example.proyecto.model.BusyHoursResponse;
+import com.example.proyecto.model.CalendarEventResponse;
+import com.example.proyecto.model.ChatJoinCodeResponse;
+import com.example.proyecto.model.ChatMemberResponse;
+import com.example.proyecto.model.ChatResponse;
+import com.example.proyecto.model.CreateChatRequest;
+import com.example.proyecto.model.ExamenRequest;
+import com.example.proyecto.model.ExamenResponse;
+import com.example.proyecto.model.JoinChatRequest;
+import com.example.proyecto.model.LoginRequest;
+import com.example.proyecto.model.LoginResponse;
+import com.example.proyecto.model.MessageResponse;
+import com.example.proyecto.model.SendMessageRequest;
+import com.example.proyecto.model.StudySessionResponse;
+import com.example.proyecto.model.TareaRequest;
+import com.example.proyecto.model.TareaResponse;
+
+import java.util.List;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
+
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.PATCH;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.DELETE;
+import retrofit2.http.Query;
+
+import com.example.proyecto.model.ChangePasswordRequest;
+import com.example.proyecto.model.ChangeUsernameRequest;
+import com.example.proyecto.model.UserProfileResponse;
+import com.example.proyecto.model.UserProfileWithTokenResponse;
+
+public interface ApiService {
+
+    @POST("auth/login")
+    Call<AuthResponse> login(@Body LoginRequest request);
+
+    @POST("auth/register")
+    Call<Void> register(@Body LoginRequest request);
+
+    @GET("tasks")
+    Call<List<TareaResponse>> getTasks(@Header("Authorization") String token);
+
+    @POST("tasks")
+    Call<TareaResponse> createTask(
+            @Header("Authorization") String token,
+            @Body TareaRequest request
+    );
+
+    @GET("exams")
+    Call<List<ExamenResponse>> getExams(@Header("Authorization") String token);
+
+    @POST("exams")
+    Call<ExamenResponse> createExam(
+            @Header("Authorization") String token,
+            @Body ExamenRequest request
+    );
+
+    @GET("sessions")
+    Call<List<StudySessionResponse>> getSessions(@Header("Authorization") String token);
+
+    @PATCH("sessions/{id}/complete")
+    Call<StudySessionResponse> completarSesion(
+            @Header("Authorization") String token,
+            @Path("id") Long id
+    );
+
+    @GET("calendar")
+    Call<List<CalendarEventResponse>> getCalendar(
+            @Header("Authorization") String token
+    );
+
+    @POST("busy-slots")
+    Call<BusyHoursResponse> createBusy(
+            @Header("Authorization") String token,
+            @Body BusyHoursRequest request
+    );
+    @POST("chats")
+    Call<ChatResponse> createChat(@Header("Authorization") String token,
+                                  @Body CreateChatRequest request);
+
+    @POST("chats/join")
+    Call<ChatResponse> joinChat(@Header("Authorization") String token,
+                                @Body JoinChatRequest request);
+
+    @GET("chats")
+    Call<List<ChatResponse>> getChats(@Header("Authorization") String token);
+
+    @GET("chats/{chatId}/messages")
+    Call<List<MessageResponse>> getMessages(@Header("Authorization") String token,
+                                            @Path("chatId") Long chatId);
+
+
+    @POST("chats/{chatId}/messages")
+    Call<MessageResponse> sendMessage(@Header("Authorization") String token,
+                                      @Path("chatId") Long chatId,
+                                      @Body SendMessageRequest request);
+
+
+    @GET("chats/{chatId}/members")
+    Call<List<ChatMemberResponse>> getChatMembers(
+            @Header("Authorization") String token,
+            @Path("chatId") Long chatId
+    );
+
+    @GET("chats/{chatId}/join-code")
+    Call<ChatJoinCodeResponse> getJoinCode(
+            @Header("Authorization") String token,
+            @Path("chatId") Long chatId
+    );
+
+    @DELETE("chats/{chatId}/members/{memberId}")
+    Call<Void> removeMember(
+            @Header("Authorization") String token,
+            @Path("chatId") Long chatId,
+            @Path("memberId") Long memberId
+    );
+    @POST("sessions/reubicar")
+    Call<Void> reubicarSesionesNoHechas(
+            @Header("Authorization") String token
+    );
+    @GET("users/me")
+    Call<UserProfileResponse> getMyProfile(
+            @Header("Authorization") String token
+    );
+
+    @PATCH("users/me/username")
+    Call<UserProfileWithTokenResponse> changeUsername(
+            @Header("Authorization") String token,
+            @Body ChangeUsernameRequest request
+    );
+
+    @PATCH("users/me/password")
+    Call<Void> changePassword(
+            @Header("Authorization") String token,
+            @Body ChangePasswordRequest request
+    );
+
+    @DELETE("users/me")
+    Call<Void> deleteMyAccount(
+            @Header("Authorization") String token
+    );
+
+    @DELETE("chats/{chatId}/leave")
+    Call<Void> leaveChat(
+            @Header("Authorization") String token,
+            @Path("chatId") Long chatId
+    );
+
+    @DELETE("exams/{id}")
+    Call<Void> deleteExam(
+            @Header("Authorization") String token,
+            @Path("id") Long id
+    );
+
+    @DELETE("tasks/{id}")
+    Call<Void> deleteTask(
+            @Header("Authorization") String token,
+            @Path("id") Long id
+    );
+
+    @DELETE("busy-slots/{id}")
+    Call<Void> deleteBusy(
+            @Header("Authorization") String token,
+            @Path("id") Long id
+    );
+
+    @PATCH("sessions/{id}/move")
+    Call<StudySessionResponse> moveSession(
+            @Header("Authorization") String token,
+            @Path("id") Long id,
+            @Query("fecha") String fecha
+    );
+
+}
